@@ -4,33 +4,14 @@
 ********************************************************************************************/
 
 #include <microhttpd.h>
-#include <string>
-#include <unordered_map>
-#include <map>
+
+
+#include  "WebParametersPrivateData.h"
 
 #include "WebParameters.h"
 
-class Parameter
-{
-public:
-	std::string value;
-	std::string defaultValue;
-	bool isSet;
-};
-
-
-typedef std::unordered_map <std::string, Parameter> Parametros;
-
-
-class LIBHTTPD_LOCAL WebParametersPrivateData
-{
-public:
-	Parametros parameters;
-
-};
-
-
-
+/*
+#include <map>
 static const std::map<Methods, std::string> HTTP_METHODS_STR
 {
 	{GET, "GET"},
@@ -39,6 +20,7 @@ static const std::map<Methods, std::string> HTTP_METHODS_STR
 	{POST, "POST"},
 	{UNKNOWN, "UNKNOWN"}
 };
+*/
 
 WebParameters::WebParameters (void * webContext) :webContext (webContext)
 {
@@ -233,4 +215,12 @@ void WebParameters::addDefaultValue (const char * param, const char * defaultVal
 	parameter.isSet = false;
 	parameter.defaultValue = defaultValue;
 	pd->parameters[param] = parameter;
+}
+
+
+
+
+WebParametersPrivateData &LIBHTTPD_LOCAL WebParameters::getPrivateData ()
+{
+	return *pd;
 }

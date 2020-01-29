@@ -41,5 +41,8 @@
     <ClInclude Include="..\include\WebParameters.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\WebParametersPrivateData.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

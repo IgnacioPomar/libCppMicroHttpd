@@ -178,6 +178,7 @@
     <ClInclude Include="..\include\libCppMicroHttpd_cfg.h" />
     <ClInclude Include="..\include\WebCommand.h" />
     <ClInclude Include="..\include\WebParameters.h" />
+    <ClInclude Include="..\include\WebParametersPrivateData.h" />
     <ClInclude Include="..\include\WebServer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

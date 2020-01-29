@@ -43,6 +43,8 @@ public:
 
 	bool isSuportedMethod ();
 
+	WebParametersPrivateData & LIBHTTPD_LOCAL getPrivateData ();
+
 	//static int parseQueryParameter (void *context, enum MHD_ValueKind kind, const char *key, const char *value);
 
 };
