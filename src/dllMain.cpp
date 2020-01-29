@@ -6,12 +6,8 @@
 
 #include <Windows.h>
 
-#pragma comment (lib, "Wtsapi32.lib")
-#ifdef __has_include
-#  if __has_include(<cryptopp/aes.h>) // crypto++ exists
-#pragma comment (lib, "cryptopp.lib")
-#  endif
-#endif
+#include "libCppMicroHttpd_pragmalib.h"
+
 
 
 BOOL APIENTRY DllMain (HMODULE hModule,

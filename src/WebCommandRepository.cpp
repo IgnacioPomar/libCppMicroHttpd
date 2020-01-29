@@ -12,7 +12,7 @@
 
 typedef std::unordered_map <std::string, std::unique_ptr<WebCommand>> CommandMap;
 
-class CommandContainer
+class LIBHTTPD_LOCAL CommandContainer
 {
 public:
 	CommandMap cm;

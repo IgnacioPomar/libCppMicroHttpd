@@ -45,7 +45,7 @@ public:
 	const char * checkOptsOrHelp (WebParameters & wsParams, bool & isAtItShould);
 	const char * checkOption (WebParameters & wsParams, Option &opt, bool & isAtItShould);
 
-	virtual bool execute (WebParameters & wsParams, std::string & response) = 0;
+	//virtual bool execute (WebParameters & wsParams, std::string & response) = 0;
 };
 
 #endif //_WEB_COMMAND_H_ABSTRACT

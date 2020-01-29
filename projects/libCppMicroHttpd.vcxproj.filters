@@ -27,15 +27,15 @@
     <ClCompile Include="..\src\WebCommandRepository.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\WebProcess.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\libCppMicroHttpd_cfg.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="..\include\libCppMicroHttpd.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\WebServer.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="..\include\WebCommand.h">
@@ -48,6 +48,12 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="..\include\WebCommandRepository.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\WebProcess.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\libCppMicroHttpd_pragmalib.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>

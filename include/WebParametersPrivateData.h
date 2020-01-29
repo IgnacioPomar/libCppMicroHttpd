@@ -13,7 +13,7 @@
 #include "libCppMicroHttpd_cfg.h"
 
 
-class Parameter
+class LIBHTTPD_LOCAL Parameter
 {
 public:
 	std::string value;

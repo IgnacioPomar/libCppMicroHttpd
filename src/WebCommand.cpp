@@ -141,7 +141,7 @@ void WebCommand::addOption (const char * optName, const char * description, cons
 #include "WebParameters.h"
 
 /**
-* Comprobamos si existe un parámetro en concreto (o si su alternativa esta establecida)
+* Check if a parameter is required, and if so, if is set (or its alternative)
 * \param    [in]   wsParams	called params
 */
 const char * WebCommand::checkOption (WebParameters & wsParams, Option & opt, bool & isAtItShould)

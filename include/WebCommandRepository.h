@@ -13,10 +13,10 @@ class WebCommand;
 class CommandContainer;
 
 //YAGNI: make it work with non static Commands (if working with dinamically load libraries)
-class WebCommandRepository
+class LIBHTTPD_LOCAL WebCommandRepository
 {
 public:
-	WebCommand *findResource (const char * url);
+	static WebCommand *findResource (const char * url);
 	static void addCommand (WebCommand* webCommand);
 private:
 	static CommandContainer & staticCommands ();
