@@ -171,12 +171,14 @@
   <ItemGroup>
     <ClCompile Include="..\src\dllMain.cpp" />
     <ClCompile Include="..\src\WebCommand.cpp" />
+    <ClCompile Include="..\src\WebCommandRepository.cpp" />
     <ClCompile Include="..\src\WebParameters.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\libCppMicroHttpd.h" />
     <ClInclude Include="..\include\libCppMicroHttpd_cfg.h" />
     <ClInclude Include="..\include\WebCommand.h" />
+    <ClInclude Include="..\include\WebCommandRepository.h" />
     <ClInclude Include="..\include\WebParameters.h" />
     <ClInclude Include="..\include\WebParametersPrivateData.h" />
     <ClInclude Include="..\include\WebServer.h" />

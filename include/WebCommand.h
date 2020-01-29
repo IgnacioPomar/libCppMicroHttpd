@@ -48,13 +48,4 @@ public:
 	virtual bool execute (WebParameters & wsParams, std::string & response) = 0;
 };
 
-
-//------ Helper to statically register the services -----
-class LIBHTTPD_API StaticWebCommandAutoRegister
-{
-public:
-	StaticWebCommandAutoRegister (WebCommand * comando);
-};
-#define AUTOREGISTRO_COMANDO(Cmd)	StaticWebCommandAutoRegister AutoRegister_##Cmd ( new Cmd ());
-
 #endif //_WEB_COMMAND_H_ABSTRACT

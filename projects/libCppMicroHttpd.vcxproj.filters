@@ -24,6 +24,9 @@
     <ClCompile Include="..\src\WebCommand.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\WebCommandRepository.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\libCppMicroHttpd_cfg.h">
@@ -42,6 +45,9 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="..\include\WebParametersPrivateData.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\WebCommandRepository.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
