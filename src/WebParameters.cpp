@@ -12,7 +12,7 @@
 
 /*
 #include <map>
-static const std::map<Methods, std::string> HTTP_METHODS_STR
+static const std::map<Method, std::string> HTTP_METHODS_STR
 {
 	{GET, "GET"},
 	{PUT, "PUT"},
@@ -29,7 +29,41 @@ WebParameters::WebParameters (void * webContext) :webContext (webContext)
 
 WebParameters::~WebParameters ()
 {
-	delete pd;
+	//Check if we have used the move constructor
+	if (pd != nullptr)
+	{
+		delete pd;
+	}
+}
+
+
+WebParameters & WebParameters::operator=(WebParameters && other)
+{
+	//Release created resources
+	delete (this->pd);
+
+	// pilfer other's resource
+	pd = other.pd;
+	webContext = other.webContext;
+
+	// reset other
+	other.pd = nullptr;
+	other.webContext = nullptr;
+
+	return *this;
+}
+
+
+WebParameters::WebParameters (WebParameters && other)
+{
+	// pilfer other's resource
+	pd = other.pd;
+	method = other.method;
+	webContext = other.webContext;
+
+	// reset other
+	other.pd = nullptr;
+	other.webContext = nullptr;
 }
 
 
@@ -37,39 +71,37 @@ WebParameters::~WebParameters ()
 *
 * \param    [in]   chMethod
 */
-void WebParameters::setMethod (const char * chMethod)
+Method WebParameters::getMethod (const char * methodCStr)
 {
-	std::string strMethod (chMethod);
+	std::string strMethod (methodCStr);
+	Method method = Method::UNKNOWN;
 
 	if (strMethod == "GET")
 	{
-		method = Methods::GET;
+		method = Method::GET;
 	}
 	else if (strMethod == "POST")
 	{
-		method = Methods::POST;
+		method = Method::POST;
 	}
 	else if (strMethod == "PUT")
 	{
-		method = Methods::PUT;
+		method = Method::PUT;
 	}
 	else if (strMethod == "DELETE")
 	{
-		method = Methods::DEL;
+		method = Method::DEL;
 	}
-	else
-	{
-		method = Methods::UNKNOWN;
-	}
+	return	method;
 }
 
 
 /**
 * Check if is one of the supported Methods
 */
-bool WebParameters::isSuportedMethod ()
+bool WebParameters::isMethodWithFiles (Method method)
 {
-	return ((method == Methods::GET) || (method == Methods::POST));
+	return ((method == Method::POST) || (method == Method::PUT));
 }
 
 

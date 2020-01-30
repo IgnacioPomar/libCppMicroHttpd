@@ -30,6 +30,9 @@
     <ClCompile Include="..\src\WebProcess.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\WebPostParams.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\libCppMicroHttpd_cfg.h">
@@ -54,6 +57,9 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="..\include\libCppMicroHttpd_pragmalib.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\WebPostParams.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>

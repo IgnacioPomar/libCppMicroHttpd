@@ -9,16 +9,14 @@
 
 #include "libCppMicroHttpd_cfg.h"
 
-enum Methods { GET, PUT, DEL, POST, UNKNOWN };
+enum Method { GET, PUT, DEL, POST, UNKNOWN };
 
 class WebParametersPrivateData;
 
 class LIBHTTPD_API WebParameters
 {
-private:
-	void addParam (const char * param, const char * data);
 public:
-	Methods method;
+	Method method;
 	void * webContext;
 
 	WebParametersPrivateData *pd;
@@ -30,6 +28,12 @@ public:
 	WebParameters (void * webContext);
 	~WebParameters ();
 
+	void addParam (const char * param, const char * data);
+
+	//move constructor and assignement
+	WebParameters& operator=(WebParameters&& other);
+	WebParameters (WebParameters && other);
+
 
 
 	double getDoubleParam (const char * param, bool & isFilled);
@@ -39,13 +43,11 @@ public:
 	void append (const char * param, const char * data);
 	void addDefaultValue (const char * param, const char * defaultValue);
 
-	void setMethod (const char * strMethod);
+	static Method getMethod (const char * strMethod);
 
-	bool isSuportedMethod ();
+	static bool isMethodWithFiles (Method method);
 
 	WebParametersPrivateData & LIBHTTPD_LOCAL getPrivateData ();
-
-	//static int parseQueryParameter (void *context, enum MHD_ValueKind kind, const char *key, const char *value);
 
 };
 

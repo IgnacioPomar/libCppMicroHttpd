@@ -14,6 +14,9 @@
 //library forward declarations
 struct MHD_Connection;
 struct MHD_Daemon;
+enum MHD_RequestTerminationCode;
+enum MHD_ValueKind;
+
 
 enum ThreadModel : char {
 	HTTP_USE_THREADS = 0x1,
@@ -36,7 +39,11 @@ private:
 	void * context;
 	MHD_Daemon * httpDaemon;
 
+
+	//conection functions with libMicroHttpd
 	static int httpRequestReciever (void * context, MHD_Connection * connection, const char * url, const char * method, const char * version, const char * upload_data, size_t * upload_data_size, void ** ptr);
+	static void httpRequestCompleted (void *context, MHD_Connection *connection, void **ptr, enum MHD_RequestTerminationCode toe);
+	static int parseQueryParameter (void *context, enum MHD_ValueKind kind, const char *key, const char *value);
 
 
 };
