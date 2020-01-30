@@ -8,6 +8,7 @@
 #ifndef _WEB_COMMAND_REPOSITORY_H_
 #define _WEB_COMMAND_REPOSITORY_H_
 
+#include "libCppMicroHttpd_cfg.h"
 
 class WebCommand;
 class CommandContainer;

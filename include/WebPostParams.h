@@ -4,6 +4,12 @@
 *	Copyright	(C) 2020
 ********************************************************************************************/
 
+
+#pragma once
+#ifndef _WEB_POST_PARAMS_H_
+#define _WEB_POST_PARAMS_H_
+
+
 #include <microhttpd.h>
 #include "libCppMicroHttpd_cfg.h"
 #include "WebParameters.h"
@@ -22,3 +28,6 @@ public:
 	~WebPostParams ();
 	WebPostParams (void * context, MHD_Connection * connection);
 };
+
+
+#endif //_WEB_POST_PARAMS_H_

@@ -3,11 +3,14 @@
 *	Description	:
 *	Copyright	(C) 2020
 ********************************************************************************************/
+#include <string>
 #include <utility> //For std::move
 #include <microhttpd.h>
 
+#include "WebCommandRepository.h"
 #include "WebParameters.h"
 #include "WebPostParams.h"
+#include "WebCommand.h"
 #include "WebProcess.h"
 
 WebProcess::WebProcess (int portNumber, ThreadModel threadModel, void * context)
@@ -175,25 +178,34 @@ int WebProcess::httpRequestReciever (void * context, MHD_Connection * connection
 
 
 	//--------------- Second fase: call the service ---------------
-
-
-	//SrvcEjepmploServidorWeb * wc = (SrvcEjepmploServidorWeb *)srvcEjemplo;
-	//const char * page = wc->getDescription ();
-	const char * page = "Hello";
-
-	/*
-	if (!wc->commands.executeResource (url, wsParams, ss))
+	bool isOk = true;
+	std::string ss = "";
+	unsigned int httpCode = MHD_HTTP_OK;
+	WebCommand *comando = WebCommandRepository::findResource (url);
+	if (comando == nullptr)
 	{
-		printf ("[Descartado] %s - %s\n", method, url);
-		return MHD_NO; // No es un servico esperado
+		httpCode = MHD_HTTP_NOT_FOUND;
 	}
-	*/
+	else
+	{
+		ss = comando->checkOptsOrHelp (wp, isOk);
+		if (!isOk)
+		{
+			httpCode = MHD_HTTP_UNPROCESSABLE_ENTITY; // Incoorrect parametters
+		}
+		else
+		{
+			ss = comando->execute (wp, isOk);
+			if (!isOk)
+			{
+				// error during execution
+				httpCode = MHD_HTTP_INTERNAL_SERVER_ERROR;
+			}
+		}
+	}
 
-
-
-
-	// Preparamos la salida final
-	//const char * page = ss.c_str ();
+	// Prepare oputput 
+	const char * page = ss.c_str ();
 
 	//--------------- final fase: the response ---------------
 	int ret;
