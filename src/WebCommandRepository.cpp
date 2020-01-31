@@ -42,7 +42,6 @@ WebCommand * WebCommandRepository::findResource (const char * url)
 		return it->second.get ();
 	else
 	{
-		//str = "<html><h2>404 Not Found</h2><br><p style=\"font-style: italic;\">El recurso " + std::string (url) + " no existe.</p></html>";
 		return nullptr;
 	}
 }
@@ -50,6 +49,9 @@ WebCommand * WebCommandRepository::findResource (const char * url)
 
 void WebCommandRepository::addCommand (WebCommand * webCommand)
 {
+	//YAGNI: to supportr real RestFul services, split by slash and create a tree
+	// (Using the ? in the path as arguments)
+
 	CommandMap & cm = WebCommandRepository::staticCommands ().cm;
 	cm[webCommand->getBaseUrl ()] = std::unique_ptr<WebCommand> (webCommand);
 }

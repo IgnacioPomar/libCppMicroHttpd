@@ -77,16 +77,15 @@ WebCommand::WebCommand (WebCommand && other)
 * Help Message
 * \param    [in]   errMsg
 */
-const char * WebCommand::getHelp (const char * errMsg)
+void WebCommand::getHelp (std::string & response, std::string * errMsg)
 {
-	std::string response;
 	response.append ("<h1>").append (this->getBaseUrl ()).append ("</h1>");
 	response.append ("<p>").append (this->getDescription ()).append ("</p>");
 
 	if (errMsg != nullptr)
 	{
 		response.append ("<h2>Error</h2>");
-		response.append (errMsg);
+		response.append (*errMsg);
 	}
 
 	response.append ("<h2>Parametros Obligatorios</h2><ul>");
@@ -130,7 +129,6 @@ const char * WebCommand::getHelp (const char * errMsg)
 	response.append ("</ br><h2>Ejemplo</h2>");
 	response.append ("<a href=\"" + href + "\">" + href + "</a>");
 
-	return response.c_str ();
 }
 
 void WebCommand::addOption (const char * optName, const char * description, bool isRequired, const char * defVal, callbackCheck checkFunc)
@@ -153,9 +151,8 @@ void WebCommand::addOption (const char * optName, const char * description, cons
 * Check if a parameter is required, and if so, if is set (or its alternative)
 * \param    [in]   wsParams	called params
 */
-const char * WebCommand::checkOption (WebParameters & wsParams, Option & opt, bool & isAtItShould)
+bool WebCommand::checkOption (WebParameters & wsParams, Option & opt, std::string & response)
 {
-	std::string response;
 	Parametros & prms = wsParams.getPrivateData ().parameters;
 	Parametros::iterator it = prms.find (opt.opt);
 	if (it == prms.end ())
@@ -169,19 +166,18 @@ const char * WebCommand::checkOption (WebParameters & wsParams, Option & opt, bo
 				{
 					std::string errMsg = "No se ha encontrado ni el parametro " + opt.opt;
 					errMsg.append ("ni " + opt.alternativeOption);
-					response = this->getHelp (errMsg.c_str ());
+					this->getHelp (response, &errMsg);
 
-					isAtItShould = false;
-					return response.c_str ();
+
+					return false;
 				}
 			}
 			else
 			{
 				std::string errMsg = "Parametro no encontrado: " + opt.opt;
-				response = this->getHelp (errMsg.c_str ());
+				this->getHelp (response, &errMsg);
 
-				isAtItShould = false;
-				return response.c_str ();
+				return false;
 			}
 		}
 		else
@@ -194,15 +190,13 @@ const char * WebCommand::checkOption (WebParameters & wsParams, Option & opt, bo
 		if (!opt.checkFunc (it->second.value.c_str (), wsParams.webContext))
 		{
 			std::string errMsg = "Parametro con valor no valido: " + opt.opt;
-			response = this->getHelp (errMsg.c_str ());
+			this->getHelp (response, &errMsg);
 
-			isAtItShould = false;
-			return response.c_str ();
+			return false;
 		}
 	}
 
-	isAtItShould = true;
-	return response.c_str ();
+	return true;
 }
 
 
@@ -212,18 +206,15 @@ const char * WebCommand::checkOption (WebParameters & wsParams, Option & opt, bo
 * \param    [in]   wsParams
 */
 
-const char * WebCommand::checkOptsOrHelp (WebParameters & wsParams, bool & isAtItShould)
+bool WebCommand::checkOptsOrHelp (WebParameters & wsParams, std::string & response)
 {
-	isAtItShould = true;
 	for (Option &opt : pd->opts)
 	{
-		std::string response (checkOption (wsParams, opt, isAtItShould));
-
-		if (!isAtItShould)
+		if (!checkOption (wsParams, opt, response))
 		{
-			return response.c_str ();
+			return false;
 		}
 	}
 
-	return "";
+	return true;
 }

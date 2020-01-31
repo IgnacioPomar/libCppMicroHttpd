@@ -187,33 +187,27 @@ int WebProcess::httpRequestReciever (void * context, MHD_Connection * connection
 
 	//--------------- Second fase: call the service ---------------
 	bool isOk = true;
-	std::string ss = "";
+	std::string responseBody = "";
 	unsigned int httpCode = MHD_HTTP_OK;
 	WebCommand *comando = WebCommandRepository::findResource (url);
 	if (comando == nullptr)
 	{
 		httpCode = MHD_HTTP_NOT_FOUND;
 	}
-	else
+	else if (!comando->checkOptsOrHelp (wp, responseBody))
 	{
-		ss = comando->checkOptsOrHelp (wp, isOk);
-		if (!isOk)
-		{
-			httpCode = MHD_HTTP_UNPROCESSABLE_ENTITY; // Incoorrect parametters
-		}
-		else
-		{
-			ss = comando->execute (wp, isOk);
-			if (!isOk)
-			{
-				// error during execution
-				httpCode = MHD_HTTP_INTERNAL_SERVER_ERROR;
-			}
-		}
+		httpCode = MHD_HTTP_UNPROCESSABLE_ENTITY; // Incoorrect parametters
+	}
+	else if (!comando->execute (wp, responseBody))
+	{
+		// error during execution
+		httpCode = MHD_HTTP_INTERNAL_SERVER_ERROR;
 	}
 
+
+
 	// Prepare oputput 
-	const char * page = ss.c_str ();
+	const char * page = responseBody.c_str ();
 
 	//--------------- final fase: the response ---------------
 	int ret;

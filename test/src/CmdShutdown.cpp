@@ -15,7 +15,9 @@ public:
 	CommandShutdown () :WebCommand (true) {};
 	const char * getBaseUrl ();
 	const char * getDescription ();
-	const char * execute (WebParameters & wsParams, bool & isAtItShould);
+	bool execute (WebParameters & wsParams, std::string & response);
+private:
+	static void closeDaemon (ExampleContext* ec);
 };
 
 
@@ -30,14 +32,24 @@ const char * CommandShutdown::getDescription ()
 }
 
 
-const char * CommandShutdown::execute (WebParameters & wsParams, bool & isAtItShould)
+#include <thread>
+bool CommandShutdown::execute (WebParameters & wsParams, std::string & response)
 {
-	isAtItShould = true;
 
 	ExampleContext* ec = (ExampleContext*)wsParams.webContext;
-	ec->wp->stopDaemon ();
+	std::thread t1 (closeDaemon, ec);
+	t1.detach ();
+	//closeDaemon (ec);
+	response = "Shuting down";
+	return true;
+}
 
-	return "Shuting down";
+
+#include <chrono>
+void CommandShutdown::closeDaemon (ExampleContext * ec)
+{
+	std::this_thread::sleep_for (std::chrono::milliseconds (10000));
+	ec->wp->stopDaemon ();
 }
 
 

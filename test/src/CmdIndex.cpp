@@ -17,7 +17,7 @@ public:
 	CmdIndex () :WebCommand (true) {};
 	const char * getBaseUrl ();
 	const char * getDescription ();
-	const char * execute (WebParameters & wsParams, bool & isAtItShould);
+	bool execute (WebParameters & wsParams, std::string & response);
 private:
 	static void addCmdInfo (WebCommand * webCmd, void* context);
 
@@ -36,7 +36,7 @@ const char * CmdIndex::getDescription ()
 }
 
 
-const char * CmdIndex::execute (WebParameters & wsParams, bool & isAtItShould)
+bool CmdIndex::execute (WebParameters & wsParams, std::string & response)
 {
 	std::ostringstream retVal;
 
@@ -48,10 +48,10 @@ const char * CmdIndex::execute (WebParameters & wsParams, bool & isAtItShould)
 	WebCommandRepository::listWebCommands (&addCmdInfo, &retVal);
 
 
-	isAtItShould = true;
-	std::string s = retVal.str ();
 
-	return s.c_str ();
+	response = retVal.str ();
+
+	return true;
 }
 
 
