@@ -36,7 +36,8 @@ bool WebProcess::initDaemon ()
 		&httpRequestReciever, context,
 		MHD_OPTION_NOTIFY_COMPLETED, &httpRequestCompleted, nullptr,
 		MHD_OPTION_END);
-	return (httpDaemon != nullptr);
+	launched = (httpDaemon != nullptr);
+	return launched;
 }
 
 
@@ -45,10 +46,17 @@ bool WebProcess::initDaemon ()
 */
 bool WebProcess::stopDaemon ()
 {
+	launched = false;
 	if (httpDaemon != nullptr)
 		MHD_stop_daemon (httpDaemon);
 
+
 	return true;
+}
+
+bool WebProcess::isOnline ()
+{
+	return launched;
 }
 
 
@@ -215,7 +223,7 @@ int WebProcess::httpRequestReciever (void * context, MHD_Connection * connection
 	// MHD_RESPMEM_MUST_FREE   - Buffer is heap-allocated with 'malloc' (or equivalent) and should be freed by MHD
 	// MHD_RESPMEM_MUST_COPY   - Buffer is in transient memory and only valid during the call to 'MHD_create_response_from_buffer'. MHD must make its own private copy of the data for processing.
 	response = MHD_create_response_from_buffer (strlen (page), (void*)page, MHD_RESPMEM_MUST_COPY);
-	ret = MHD_queue_response (connection, MHD_HTTP_OK, response);
+	ret = MHD_queue_response (connection, httpCode, response);
 	MHD_destroy_response (response);
 	return ret;
 }

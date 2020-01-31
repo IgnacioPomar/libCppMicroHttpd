@@ -13,12 +13,17 @@
 class WebCommand;
 class CommandContainer;
 
+//Callback to inform about the commands aviable
+typedef void (*callbackInfoCmd)(WebCommand *, void *);
+
 //YAGNI: make it work with non static Commands (if working with dinamically load libraries)
-class LIBHTTPD_LOCAL WebCommandRepository
+class LIBHTTPD_API WebCommandRepository
 {
 public:
 	static WebCommand *findResource (const char * url);
 	static void addCommand (WebCommand* webCommand);
+
+	static void listWebCommands (callbackInfoCmd infoCmd, void * context);
 private:
 	static CommandContainer & staticCommands ();
 
@@ -30,7 +35,7 @@ class LIBHTTPD_API StaticWebCommandAutoRegister
 public:
 	StaticWebCommandAutoRegister (WebCommand * comando);
 };
-#define AUTOREGISTRO_COMANDO(Cmd)	StaticWebCommandAutoRegister AutoRegister_##Cmd ( new Cmd ());
+#define AUTOREGISTER_COMMAND(Cmd)	StaticWebCommandAutoRegister AutoRegister_##Cmd ( new Cmd ());
 
 
 

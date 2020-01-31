@@ -60,7 +60,16 @@ WebCommand::WebCommand (bool hasAutomaticOpts)
 
 WebCommand::~WebCommand ()
 {
-	delete pd;
+	if (pd != nullptr)
+	{
+		delete pd;
+	}
+}
+
+WebCommand::WebCommand (WebCommand && other)
+{
+	this->pd = other.pd;
+	other.pd = nullptr;
 }
 
 

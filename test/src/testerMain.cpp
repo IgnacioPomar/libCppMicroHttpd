@@ -19,15 +19,28 @@
 #include <thread>
 
 
+#include "ExampleContext.h"
+
+ExampleContext ec;
+
 int main (int argc, const char * argv[])
 {
-	WebProcess wp (8585, ThreadModel::HTTP_USE_SELECT);
+
+
+	WebProcess wp (8585, ThreadModel::HTTP_USE_SELECT, &ec);
+	ec.wp = &wp;
 
 	wp.initDaemon ();
 
-	std::this_thread::sleep_for (std::chrono::milliseconds (10000));
 
-	wp.stopDaemon ();
+	while (wp.isOnline ())
+	{
+		std::this_thread::sleep_for (std::chrono::milliseconds (100));
+	}
+
+
+
+	//wp.stopDaemon ();
 
 
 	return 1;

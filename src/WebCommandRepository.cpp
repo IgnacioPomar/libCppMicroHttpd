@@ -54,6 +54,14 @@ void WebCommandRepository::addCommand (WebCommand * webCommand)
 	cm[webCommand->getBaseUrl ()] = std::unique_ptr<WebCommand> (webCommand);
 }
 
+void WebCommandRepository::listWebCommands (callbackInfoCmd infoCmd, void * context)
+{
+	for (auto& cmdNode : staticCommands ().cm)
+	{
+		infoCmd (cmdNode.second.get (), context);
+	}
+}
+
 
 
 CommandContainer & WebCommandRepository::staticCommands ()

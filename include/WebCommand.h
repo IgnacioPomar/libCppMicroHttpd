@@ -30,6 +30,7 @@ private:
 public:
 	WebCommand (bool hasAutomaticOpts);
 	~WebCommand ();
+	WebCommand (WebCommand && other);
 	WebCommand (WebCommand const&) = delete;
 	WebCommand& operator=(WebCommand const&) = delete;
 

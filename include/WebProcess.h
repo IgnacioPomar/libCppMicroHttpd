@@ -32,10 +32,13 @@ public:
 	WebProcess (int  portNumber, ThreadModel threadModel, void * context = nullptr);
 	bool initDaemon ();
 	bool stopDaemon ();
+	bool isOnline ();
 
 private:
 	unsigned int flags;
 	int portNumber;
+	bool launched;
+
 	void * context;
 	MHD_Daemon * httpDaemon;
 

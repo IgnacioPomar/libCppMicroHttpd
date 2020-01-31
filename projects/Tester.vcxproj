@@ -166,7 +166,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\test\src\CmdIndex.cpp" />
+    <ClCompile Include="..\test\src\CmdShutdown.cpp" />
     <ClCompile Include="..\test\src\testerMain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\test\src\ExampleContext.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
