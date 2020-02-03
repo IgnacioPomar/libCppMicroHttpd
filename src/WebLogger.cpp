@@ -3,7 +3,7 @@
 *	Description	: Abstract class to allow the configuration of a log class
 *	Copyright	(C) 2020
 ********************************************************************************************/
-
+#define _CRT_SECURE_NO_WARNINGS
 #include <string>
 
 #include "WebParametersPrivateData.h"
@@ -11,21 +11,21 @@
 #include "WebLogger.h"
 
 
-void formatUrl (std::string & s, const char * url);
+void formatUrl (std::string & s, const char * url, const char * method, MHD_Connection * connection);
 
 
-void WebLogger::logUrl (const char * url)
+void WebLogger::logUrl (const char * url, const char * method, MHD_Connection * connection)
 {
 	std::string s;
-	formatUrl (s, url);
+	formatUrl (s, url, method, connection);
 
 	this->sendToLog (s.c_str ());
 }
 
-void WebLogger::logParams (const char * url, WebParameters & requestParams)
+void WebLogger::logParams (const char * url, const char * method, MHD_Connection * connection, WebParameters & requestParams)
 {
 	std::string s;
-	formatUrl (s, url);
+	formatUrl (s, url, method, connection);
 
 
 	WebParametersPrivateData & wpPd = requestParams.getPrivateData ();
@@ -40,11 +40,11 @@ void WebLogger::logParams (const char * url, WebParameters & requestParams)
 
 }
 
-void WebLogger::logParamsContents (const char * url, WebParameters & requestParams)
+void WebLogger::logParamsContents (const char * url, const char * method, MHD_Connection * connection, WebParameters & requestParams)
 {
 
 	std::string s;
-	formatUrl (s, url);
+	formatUrl (s, url, method, connection);
 
 	WebParametersPrivateData & wpPd = requestParams.getPrivateData ();
 
@@ -67,22 +67,48 @@ void WebLogger::logParamsContents (const char * url, WebParameters & requestPara
 }
 
 
+//----------------------------------------------------------------------------------
+
+
+#include <microhttpd.h>
 #include <chrono>  // chrono::system_clock
 #include <ctime>   // localtime
 
 
-void formatUrl (std::string & s, const char * url)
+
+void formatUrl (std::string & s, const char * url, const char * method, MHD_Connection * conn)
 {
+	//TODO: When C++20 arrives.. use std::format and std::chrono::format
+	//TODO: Support ipV6
+
+	//Current time to CString
 	auto now = std::chrono::system_clock::now ();
 	auto in_time_t = std::chrono::system_clock::to_time_t (now);
-
-
 	struct tm buf;
 	gmtime_s (&buf, &in_time_t);
-
-
 	char str[26];
 	strftime ((char *)str, sizeof (str), "%F %T UTC", &buf);
 
-	s.append ("[").append (str).append ("]\t").append (url);
+
+
+	//Get origin IP
+	char ipBuff[17];
+	struct sockaddr *addr = MHD_get_connection_info (conn, MHD_CONNECTION_INFO_CLIENT_ADDRESS)->client_addr;
+	if (addr != nullptr)
+	{
+		snprintf (ipBuff, sizeof (ipBuff), "%d.%d.%d.%d",
+			addr->sa_data[2] & 0xFF,
+			addr->sa_data[3] & 0xFF,
+			addr->sa_data[4] & 0xFF,
+			addr->sa_data[5] & 0xFF);
+	}
+	else
+	{
+		strncpy (ipBuff, "-.-.-.-", 8);
+	}
+
+	//Compose the final line
+	s.append (ipBuff).append ("\t");
+	s.append ("[").append (str).append ("]\t");
+	s.append ("\"").append (method).append (" ").append (url).append ("\"");
 }

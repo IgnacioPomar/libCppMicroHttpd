@@ -144,7 +144,7 @@ int WebProcess::httpRequestReciever (void * webProcess, MHD_Connection * connect
 		*ptr = &dummy;
 		if (wp->logMode == LogMode::DEBUG_URL)
 		{
-			wp->logger->logUrl (url);
+			wp->logger->logUrl (url, methodCStr, connection);
 		}
 
 		return MHD_YES;
@@ -202,12 +202,12 @@ int WebProcess::httpRequestReciever (void * webProcess, MHD_Connection * connect
 
 	if (wp->logMode == LogMode::DEBUG_CONTENT_PARAMS)
 	{
-		wp->logger->logParamsContents (url, requestParams);
+		wp->logger->logParamsContents (url, methodCStr, connection, requestParams);
 
 	}
 	else if (wp->logMode == LogMode::DEBUG_USED_PARAMS)
 	{
-		wp->logger->logParams (url, requestParams);
+		wp->logger->logParams (url, methodCStr, connection, requestParams);
 	}
 
 
