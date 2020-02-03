@@ -48,7 +48,7 @@ bool CommandShutdown::execute (WebParameters & wsParams, std::string & response)
 #include <chrono>
 void CommandShutdown::closeDaemon (ExampleContext * ec)
 {
-	std::this_thread::sleep_for (std::chrono::milliseconds (10000));
+	std::this_thread::sleep_for (std::chrono::milliseconds (100));
 	ec->wp->stopDaemon ();
 }
 

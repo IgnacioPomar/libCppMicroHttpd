@@ -18,7 +18,7 @@
 #include <chrono>
 #include <thread>
 
-
+#include "Logger.h"
 #include "ExampleContext.h"
 
 ExampleContext ec;
@@ -29,6 +29,13 @@ int main (int argc, const char * argv[])
 
 	WebProcess wp (8585, ThreadModel::HTTP_USE_SELECT, &ec);
 	ec.wp = &wp;
+
+	Logger logger;
+
+	LogMode logMode = LogMode::DEBUG_URL;
+	//logMode = LogMode::DEBUG_USED_PARAMS;
+	logMode = LogMode::DEBUG_CONTENT_PARAMS;
+	wp.setDebugMode (logMode, &logger);
 
 	wp.initDaemon ();
 

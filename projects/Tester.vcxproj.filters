@@ -24,9 +24,15 @@
     <ClCompile Include="..\test\src\CmdShutdown.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\test\src\Logger.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\test\src\ExampleContext.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\test\src\Logger.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>

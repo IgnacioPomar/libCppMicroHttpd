@@ -7,6 +7,7 @@
 #include <utility> //For std::move
 #include <microhttpd.h>
 
+#include "WebLogger.h"
 #include "WebCommandRepository.h"
 #include "WebParameters.h"
 #include "WebPostParams.h"
@@ -14,7 +15,8 @@
 #include "WebProcess.h"
 
 WebProcess::WebProcess (int portNumber, ThreadModel threadModel, void * context)
-	:portNumber (portNumber), context (context)
+	:portNumber (portNumber), context (context),
+	logger (nullptr), logMode (LogMode::NO_DEBUG)
 {
 	flags = (threadModel == ThreadModel::HTTP_USE_SELECT) ?
 		MHD_USE_SELECT_INTERNALLY :
@@ -33,7 +35,7 @@ WebProcess::WebProcess (int portNumber, ThreadModel threadModel, void * context)
 bool WebProcess::initDaemon ()
 {
 	httpDaemon = MHD_start_daemon (flags, portNumber, nullptr, nullptr,
-		&httpRequestReciever, context,
+		&httpRequestReciever, this,
 		MHD_OPTION_NOTIFY_COMPLETED, &httpRequestCompleted, nullptr,
 		MHD_OPTION_END);
 	launched = (httpDaemon != nullptr);
@@ -57,6 +59,12 @@ bool WebProcess::stopDaemon ()
 bool WebProcess::isOnline ()
 {
 	return launched;
+}
+
+void WebProcess::setDebugMode (LogMode logMode, WebLogger * logger)
+{
+	this->logger = logger;
+	this->logMode = (logger == nullptr) ? LogMode::NO_DEBUG : logMode;
 }
 
 
@@ -125,14 +133,20 @@ int WebProcess::parseQueryParameter (void * context, MHD_ValueKind kind, const c
 *                                   since the access handler may be called many times (i.e., for a PUT/POST operation with plenty of upload data)
 * \return	Must return MHD_YES if the connection was handled successfully, MHD_NO if the socket must be closed due to a serious error while handling the request
 */
-int WebProcess::httpRequestReciever (void * context, MHD_Connection * connection, const char * url, const char * methodCStr, const char * version, const char * upload_data, size_t * upload_data_size, void ** ptr)
+int WebProcess::httpRequestReciever (void * webProcess, MHD_Connection * connection, const char * url, const char * methodCStr, const char * version, const char * upload_data, size_t * upload_data_size, void ** ptr)
 {
+	WebProcess * wp = (WebProcess *)webProcess;
 	//--------------- first fase: parse the parameters ---------------
 
 	// The first time only the headers are valid,   do not respond in the first round... 
 	if (*ptr == nullptr)
 	{
 		*ptr = &dummy;
+		if (wp->logMode == LogMode::DEBUG_URL)
+		{
+			wp->logger->logUrl (url);
+		}
+
 		return MHD_YES;
 	}
 
@@ -142,7 +156,7 @@ int WebProcess::httpRequestReciever (void * context, MHD_Connection * connection
 	//Process post uploads
 	if (*upload_data_size)
 	{
-		WebPostParams * pwp;
+		WebPostParams * postParams;
 		if (*ptr == &dummy)
 		{
 			method = WebParameters::getMethod (methodCStr);
@@ -153,36 +167,48 @@ int WebProcess::httpRequestReciever (void * context, MHD_Connection * connection
 				return MHD_NO;
 			}
 
-			pwp = new WebPostParams (context, connection);
-			*ptr = pwp;
 
-			pwp->wp.method = method;
+			postParams = new WebPostParams (wp->context, connection);
+			*ptr = postParams;
+
+			postParams->wp.method = method;
 
 			return MHD_YES;
 		}
 		else
 		{
-			pwp = (WebPostParams *)*ptr;
+			postParams = (WebPostParams *)*ptr;
 		}
 
-		MHD_post_process (pwp->postProcessor, upload_data, *upload_data_size);
+		MHD_post_process (postParams->postProcessor, upload_data, *upload_data_size);
 		*upload_data_size = 0;
 		return MHD_YES;
 	}
 
 	// Now, query parameters
-	WebParameters wp (context);
+	WebParameters requestParams (wp->context);
 	if (*ptr != &dummy)
 	{
 		//we have parsed POST parameters
 		WebPostParams * pwp = (WebPostParams *)*ptr;
-		wp = std::move (pwp->wp);
+		requestParams = std::move (pwp->wp);
 	}
 	else
 	{
-		wp.method = WebParameters::getMethod (methodCStr);
+		requestParams.method = WebParameters::getMethod (methodCStr);
 	}
-	MHD_get_connection_values (connection, MHD_GET_ARGUMENT_KIND, parseQueryParameter, &wp);
+	MHD_get_connection_values (connection, MHD_GET_ARGUMENT_KIND, parseQueryParameter, &requestParams);
+
+
+	if (wp->logMode == LogMode::DEBUG_CONTENT_PARAMS)
+	{
+		wp->logger->logParamsContents (url, requestParams);
+
+	}
+	else if (wp->logMode == LogMode::DEBUG_USED_PARAMS)
+	{
+		wp->logger->logParams (url, requestParams);
+	}
 
 
 	//--------------- Second fase: call the service ---------------
@@ -194,11 +220,11 @@ int WebProcess::httpRequestReciever (void * context, MHD_Connection * connection
 	{
 		httpCode = MHD_HTTP_NOT_FOUND;
 	}
-	else if (!comando->checkOptsOrHelp (wp, responseBody))
+	else if (!comando->checkOptsOrHelp (requestParams, responseBody))
 	{
 		httpCode = MHD_HTTP_UNPROCESSABLE_ENTITY; // Incoorrect parametters
 	}
-	else if (!comando->execute (wp, responseBody))
+	else if (!comando->execute (requestParams, responseBody))
 	{
 		// error during execution
 		httpCode = MHD_HTTP_INTERNAL_SERVER_ERROR;

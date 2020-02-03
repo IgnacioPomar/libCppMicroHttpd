@@ -169,6 +169,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\WebLogger.cpp" />
     <ClCompile Include="..\src\dllMain.cpp" />
     <ClCompile Include="..\src\WebCommand.cpp" />
     <ClCompile Include="..\src\WebCommandRepository.cpp" />
@@ -177,6 +178,7 @@
     <ClCompile Include="..\src\WebProcess.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\include\WebLogger.h" />
     <ClInclude Include="..\include\libCppMicroHttpd.h" />
     <ClInclude Include="..\include\libCppMicroHttpd_cfg.h" />
     <ClInclude Include="..\include\libCppMicroHttpd_pragmalib.h" />
