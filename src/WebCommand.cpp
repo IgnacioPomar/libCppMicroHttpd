@@ -52,7 +52,7 @@ Option::Option (const char * opt, const char * description, const char * alterna
 }
 
 
-WebCommand::WebCommand (bool hasAutomaticOpts)
+WebCommand::WebCommand (bool hasAutomaticOpts, bool isEnabled) : isEnabled (isEnabled)
 {
 	pd = new WebCommandPrivateData ();
 	pd->hasAutomaticOpts = hasAutomaticOpts;

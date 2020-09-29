@@ -28,7 +28,9 @@ private:
 	WebCommandPrivateData *pd;
 
 public:
-	WebCommand (bool hasAutomaticOpts);
+	bool isEnabled;
+
+	WebCommand (bool hasAutomaticOpts, bool isEnabled);
 	~WebCommand ();
 	WebCommand (WebCommand && other);
 	WebCommand (WebCommand const&) = delete;

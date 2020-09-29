@@ -14,7 +14,7 @@
 class CmdIndex : public WebCommand
 {
 public:
-	CmdIndex () :WebCommand (true) {};
+	CmdIndex () :WebCommand (true, true) {};
 	const char * getBaseUrl ();
 	const char * getDescription ();
 	bool execute (WebParameters & wsParams, std::string & response);
@@ -62,7 +62,15 @@ void CmdIndex::addCmdInfo (WebCommand * webCmd, void * context)
 	//we are comparing the pointer direction.... as static it should be the same
 	if (CmdIndex::url != webCmd->getBaseUrl ())
 	{
-		retVal << "<li><a href=\"" << webCmd->getBaseUrl () << "\">" << webCmd->getBaseUrl () << "</a>: " << webCmd->getDescription () << " </li>";
+		if (webCmd->isEnabled)
+		{
+			retVal << "<li><a href=\"" << webCmd->getBaseUrl () << "\">" << webCmd->getBaseUrl () << "</a>: " << webCmd->getDescription () << " </li>";
+		}
+		else
+		{
+			retVal << "<li style=\"color:#afafaf;\">" << webCmd->getBaseUrl () << ": " << webCmd->getDescription () << " </li>";
+		}
+
 	}
 
 

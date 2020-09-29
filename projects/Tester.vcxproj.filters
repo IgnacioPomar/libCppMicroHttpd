@@ -27,6 +27,9 @@
     <ClCompile Include="..\test\src\Logger.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\test\src\CmdEnableDisable.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\test\src\ExampleContext.h">

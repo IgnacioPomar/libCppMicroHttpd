@@ -166,6 +166,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\test\src\CmdEnableDisable.cpp" />
     <ClCompile Include="..\test\src\CmdIndex.cpp" />
     <ClCompile Include="..\test\src\CmdShutdown.cpp" />
     <ClCompile Include="..\test\src\Logger.cpp" />

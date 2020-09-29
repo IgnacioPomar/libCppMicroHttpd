@@ -12,7 +12,7 @@
 class CommandShutdown : public WebCommand
 {
 public:
-	CommandShutdown () :WebCommand (true) {};
+	CommandShutdown () :WebCommand (true, true) {};
 	const char * getBaseUrl ();
 	const char * getDescription ();
 	bool execute (WebParameters & wsParams, std::string & response);

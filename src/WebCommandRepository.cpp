@@ -23,6 +23,8 @@ public:
 WebCommand * WebCommandRepository::findResource (const char * url)
 {
 	/*
+	//YAGNI: Actually we are only searching for the string... may be in the future
+
 	Restful architecture: It could be this:
 	http://acme.com/products/					==> All products
 	http://acme.com/products/?filter=abc		==>	Filtered all products
@@ -34,15 +36,30 @@ WebCommand * WebCommandRepository::findResource (const char * url)
 	that means we should split the URL by / and create a classic tree
 	*/
 
-	//YAGNI: Actually we are only searching for the string... may be in the future
 	CommandMap & cm = WebCommandRepository::staticCommands ().cm;
 	CommandMap::iterator it = cm.find (url);
 
 	if (it != cm.end ())
-		return it->second.get ();
+	{
+		WebCommand * wc = it->second.get ();
+		return (wc->isEnabled) ? wc : nullptr;
+	}
 	else
 	{
 		return nullptr;
+	}
+}
+
+
+void WebCommandRepository::setCommandStatus (const char * url, bool isEnabled)
+{
+	CommandMap & cm = WebCommandRepository::staticCommands ().cm;
+	CommandMap::iterator it = cm.find (url);
+
+	if (it != cm.end ())
+	{
+		WebCommand * wc = it->second.get ();
+		wc->isEnabled = isEnabled;
 	}
 }
 

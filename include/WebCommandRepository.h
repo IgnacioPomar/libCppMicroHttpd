@@ -22,6 +22,7 @@ class LIBHTTPD_API WebCommandRepository
 public:
 	static WebCommand *findResource (const char * url);
 	static void addCommand (WebCommand* webCommand);
+	static void setCommandStatus (const char * url, bool isEnabled);
 
 	static void listWebCommands (callbackInfoCmd infoCmd, void * context);
 private:
