@@ -47,6 +47,8 @@ public:
 	bool isOnline ();
 
 
+	bool setPort (int  portNumber);
+	bool setThreadModel (ThreadModel threadModel);
 	void setDebugMode (LogMode logMode, WebLogger* debugLogger);
 
 private:

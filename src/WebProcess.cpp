@@ -15,15 +15,10 @@
 #include "WebProcess.h"
 
 WebProcess::WebProcess (int portNumber, ThreadModel threadModel, void * context)
-	:portNumber (portNumber), context (context),
+	:portNumber (portNumber), context (context), launched (false),
 	logger (nullptr), logMode (LogMode::NO_DEBUG)
 {
-	flags = (threadModel == ThreadModel::HTTP_USE_SELECT) ?
-		MHD_USE_SELECT_INTERNALLY :
-		MHD_USE_THREAD_PER_CONNECTION;
-#if _DEBUG
-	flags |= MHD_USE_DEBUG;
-#endif
+	setThreadModel (threadModel);
 
 	httpDaemon = nullptr;
 }
@@ -60,6 +55,31 @@ bool WebProcess::isOnline ()
 {
 	return launched;
 }
+
+bool WebProcess::setPort (int portNumber)
+{
+	if (!launched)
+	{
+		this->portNumber = portNumber;
+	}
+	return launched;
+}
+
+
+bool WebProcess::setThreadModel (ThreadModel threadModel)
+{
+	if (!launched)
+	{
+		flags = (threadModel == ThreadModel::HTTP_USE_SELECT) ?
+			MHD_USE_SELECT_INTERNALLY :
+			MHD_USE_THREAD_PER_CONNECTION;
+#if _DEBUG
+		flags |= MHD_USE_DEBUG;
+#endif
+	}
+	return launched;
+}
+
 
 void WebProcess::setDebugMode (LogMode logMode, WebLogger * logger)
 {
