@@ -30,6 +30,9 @@
     <ClCompile Include="..\test\src\CmdEnableDisable.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\test\src\CmdUsingparams.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\test\src\ExampleContext.h">

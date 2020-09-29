@@ -169,6 +169,7 @@
     <ClCompile Include="..\test\src\CmdEnableDisable.cpp" />
     <ClCompile Include="..\test\src\CmdIndex.cpp" />
     <ClCompile Include="..\test\src\CmdShutdown.cpp" />
+    <ClCompile Include="..\test\src\CmdUsingparams.cpp" />
     <ClCompile Include="..\test\src\Logger.cpp" />
     <ClCompile Include="..\test\src\testerMain.cpp" />
   </ItemGroup>
