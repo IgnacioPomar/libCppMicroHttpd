@@ -45,8 +45,10 @@ bool WebProcess::stopDaemon ()
 {
 	launched = false;
 	if (httpDaemon != nullptr)
+	{
 		MHD_stop_daemon (httpDaemon);
-
+		httpDaemon = nullptr;
+	}
 
 	return true;
 }
