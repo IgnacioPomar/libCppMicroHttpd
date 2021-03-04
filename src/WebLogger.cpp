@@ -78,17 +78,7 @@ void WebLogger::logParamsContents (const char * url, const char * method, MHD_Co
 
 void formatUrl (std::string & s, const char * url, const char * method, MHD_Connection * conn)
 {
-	//TODO: When C++20 arrives.. use std::format and std::chrono::format
 	//TODO: Support ipV6
-
-	//Current time to CString
-	auto now = std::chrono::system_clock::now ();
-	auto in_time_t = std::chrono::system_clock::to_time_t (now);
-	struct tm buf;
-	gmtime_s (&buf, &in_time_t);
-	char str[26];
-	strftime ((char *)str, sizeof (str), "%F %T UTC", &buf);
-
 
 
 	//Get origin IP
@@ -109,6 +99,5 @@ void formatUrl (std::string & s, const char * url, const char * method, MHD_Conn
 
 	//Compose the final line
 	s.append (ipBuff).append ("\t");
-	s.append ("[").append (str).append ("]\t");
 	s.append ("\"").append (method).append (" ").append (url).append ("\"");
 }

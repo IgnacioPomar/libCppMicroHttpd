@@ -6,3 +6,4 @@
 #include "WebParameters.h"
 #include "WebCommand.h"
 #include "WebLogger.h"
+#include "StackLogger.h"
