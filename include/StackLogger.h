@@ -9,13 +9,13 @@
 
 enum class LogLevelVal : unsigned char
 {
-	DONT_LOG = 0xff,
-	TRACE = 0x00,
-	DEBUG = 0x01,
-	INFO = 0x02,
-	WARN = 0x03,
-	ERROR = 0x04,
-	FATAL = 0x05
+	DontLog = 0xff,
+	Trace = 0x00,
+	Debug = 0x01,
+	Info = 0x02,
+	Warn = 0x03,
+	Error = 0x04,
+	Fatal = 0x05
 };
 
 /**
@@ -66,7 +66,7 @@ private:
 	StackLogger& operator=(StackLogger&&) = delete; // no move assignments
 
 public:
-	StackLogger (unsigned int maxStoredEvents = 500, LogLevel logLevel = LogLevelVal::DONT_LOG, const char * logPath = nullptr, const char * fileName = nullptr);
+	StackLogger (unsigned int maxStoredEvents = 500, LogLevel logLevel = LogLevelVal::DontLog, const char * logPath = nullptr, const char * fileName = nullptr);
 	~StackLogger ();
 
 	//This is the "TRACE": it'll recieve events from WebLogger

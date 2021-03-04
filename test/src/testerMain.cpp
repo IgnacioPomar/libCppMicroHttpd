@@ -29,7 +29,7 @@ int main (int argc, const char * argv[])
 	WebProcess wp (8585, ThreadModel::HTTP_USE_SELECT, &ec);
 
 	StackLogger logger;
-	logger.setConsoleMode (LogLevelVal::TRACE);
+	logger.setConsoleMode (LogLevelVal::Trace);
 
 	//Set the context all the calls will recieve
 	ec.wp = &wp;
