@@ -72,8 +72,6 @@ void CmdIndex::addCmdInfo (WebCommand * webCmd, void * context)
 		}
 
 	}
-
-
 }
 
 

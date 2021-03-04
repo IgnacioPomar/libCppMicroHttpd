@@ -7,6 +7,16 @@
 
 #include "WebLogger.h"
 
+enum class LogLevelVal : unsigned char
+{
+	DONT_LOG = 0xff,
+	TRACE = 0x00,
+	DEBUG = 0x01,
+	INFO = 0x02,
+	WARN = 0x03,
+	ERROR = 0x04,
+	FATAL = 0x05
+};
 
 /**
 * Simple class enum with functions: represents the severity of the log
@@ -14,28 +24,17 @@
 class LIBHTTPD_API LogLevel
 {
 public:
-	enum Value : unsigned char
-	{
-		DONT_LOG = 0xff,
-		TRACE = 0x00,
-		DEBUG = 0x01,
-		INFO = 0x02,
-		WARN = 0x03,
-		ERROR = 0x04,
-		FATAL = 0x05
-	};
-
 	LogLevel () = default;
 	explicit operator bool () = delete; // Prevent usage: if(LogLevel)
-	operator Value() const;
+	operator LogLevelVal() const;
 
-	constexpr LogLevel (Value value);
+	constexpr LogLevel (LogLevelVal value);
 	constexpr bool IsWorseThan (LogLevel logLevel) const;
 	constexpr const char * toString () const;
 
 
 private:
-	Value value;
+	LogLevelVal value;
 };
 
 /**
@@ -67,7 +66,7 @@ private:
 	StackLogger& operator=(StackLogger&&) = delete; // no move assignments
 
 public:
-	StackLogger (unsigned int maxStoredEvents = 500, LogLevel logLevel = LogLevel::DONT_LOG, const char * logPath = nullptr, const char * fileName = nullptr);
+	StackLogger (unsigned int maxStoredEvents = 500, LogLevel logLevel = LogLevelVal::DONT_LOG, const char * logPath = nullptr, const char * fileName = nullptr);
 	~StackLogger ();
 
 	//This is the "TRACE": it'll recieve events from WebLogger

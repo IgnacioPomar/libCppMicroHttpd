@@ -54,14 +54,15 @@ public:
 /**
 * Constructor
 */
-constexpr  LogLevel::LogLevel (Value value) : value (value)
+constexpr  LogLevel::LogLevel (LogLevelVal value) : value (value)
 {
 }
+
 
 /**
 * Allow switch and comparisons
 */
-LogLevel::operator Value() const
+LogLevel::operator LogLevelVal() const
 {
 	return value;
 }
@@ -81,12 +82,12 @@ constexpr const char * LogLevel::toString () const
 {
 	switch (this->value)
 	{
-	case LogLevel::TRACE: return "TRACE"; break;
-	case LogLevel::DEBUG: return "DEBUG"; break;
-	case LogLevel::INFO: return "INFO"; break;
-	case LogLevel::WARN: return "WARN"; break;
-	case LogLevel::ERROR: return "ERROR"; break;
-	case LogLevel::FATAL: return "FATAL"; break;
+	case LogLevelVal::TRACE: return "TRACE"; break;
+	case LogLevelVal::DEBUG: return "DEBUG"; break;
+	case LogLevelVal::INFO: return "INFO"; break;
+	case LogLevelVal::WARN: return "WARN"; break;
+	case LogLevelVal::ERROR: return "ERROR"; break;
+	case LogLevelVal::FATAL: return "FATAL"; break;
 	default: return "";
 	}
 }
@@ -150,7 +151,7 @@ void StackLogger::send (EventContainer & ec)
 */
 void StackLogger::sendToLog (const char * event)
 {
-	this->log (LogLevel::TRACE, event);
+	this->log (LogLevelVal::TRACE, event);
 }
 
 /**
@@ -159,7 +160,7 @@ void StackLogger::sendToLog (const char * event)
 
 void StackLogger::trace (const char * event)
 {
-	this->log (LogLevel::TRACE, event);
+	this->log (LogLevelVal::TRACE, event);
 }
 
 /**
@@ -167,7 +168,7 @@ void StackLogger::trace (const char * event)
 */
 void StackLogger::debug (const char * event)
 {
-	this->log (LogLevel::DEBUG, event);
+	this->log (LogLevelVal::DEBUG, event);
 }
 
 /**
@@ -175,7 +176,7 @@ void StackLogger::debug (const char * event)
 */
 void StackLogger::info (const char * event)
 {
-	this->log (LogLevel::INFO, event);
+	this->log (LogLevelVal::INFO, event);
 }
 
 
@@ -184,7 +185,7 @@ void StackLogger::info (const char * event)
 */
 void StackLogger::error (const char * event)
 {
-	this->log (LogLevel::ERROR, event);
+	this->log (LogLevelVal::ERROR, event);
 }
 
 
@@ -193,7 +194,7 @@ void StackLogger::error (const char * event)
 */
 void StackLogger::fatal (const char * event)
 {
-	this->log (LogLevel::FATAL, event);
+	this->log (LogLevelVal::FATAL, event);
 }
 
 
@@ -251,7 +252,7 @@ void StackLogger::setConsoleMode (LogLevel logLevel)
 */
 void StackLogger::setFileMode (LogLevel logLevel, const char * logPath, const char * fileName)
 {
-	if (pd->fileLogLevel != LogLevel::DONT_LOG)
+	if (pd->fileLogLevel != LogLevelVal::DONT_LOG)
 	{
 		pd->logfile.flush ();
 		pd->logfile.close ();
@@ -267,11 +268,11 @@ void StackLogger::setFileMode (LogLevel logLevel, const char * logPath, const ch
 	}
 	else
 	{
-		pd->fileLogLevel = LogLevel::DONT_LOG;
+		pd->fileLogLevel = LogLevelVal::DONT_LOG;
 	}
 
 	//open the file if we must
-	if (logLevel != LogLevel::DONT_LOG)
+	if (logLevel != LogLevelVal::DONT_LOG)
 	{
 		std::string logFileName;
 
