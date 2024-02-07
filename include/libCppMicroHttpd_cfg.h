@@ -14,7 +14,6 @@
 //IMPORTANT: the project who exports must have the preprocessor macro LIBHTTPD_EXPORTS
 
 //see http://gcc.gnu.org/wiki/Visibility
-
 // Generic helper definitions for shared library support
 #if defined _WIN32 || defined __CYGWIN__
 #define LIBHTTPD_HELPER_DLL_IMPORT __declspec(dllimport)

@@ -78,7 +78,7 @@ constexpr bool LogLevel::IsWorseThan (LogLevel logLevel) const
 /**
 * Converts the log level into its sting
 */
-constexpr const char * LogLevel::toString () const
+constexpr const char* LogLevel::toString () const
 {
 	switch (this->value)
 	{
@@ -100,7 +100,7 @@ constexpr const char * LogLevel::toString () const
 /**
 * Constructor: creates the private data and sets the initial logs
 */
-StackLogger::StackLogger (unsigned int maxStoredEvents, LogLevel logLevel, const char * logPath, const char * fileName)
+StackLogger::StackLogger (unsigned int maxStoredEvents, LogLevel logLevel, const char* logPath, const char* fileName)
 {
 	this->pd = new StackLoggerPrivateData ();
 
@@ -128,7 +128,7 @@ StackLogger::~StackLogger ()
 /**
 * send to the corresponding out streams the formatted mesage
 */
-void StackLogger::send (EventContainer & ec)
+void StackLogger::send (EventContainer& ec)
 {
 	std::string retVal = ec.logLevel.toString ();
 	retVal.append ("\t\t").append (ec.date).append ("\t\t").append (ec.event);
@@ -149,7 +149,7 @@ void StackLogger::send (EventContainer & ec)
 /**
 * Recieves the log from the WebLogger. Mark them as trace
 */
-void StackLogger::sendToLog (const char * event)
+void StackLogger::sendToLog (const char* event)
 {
 	this->log (LogLevelVal::Trace, event);
 }
@@ -158,7 +158,7 @@ void StackLogger::sendToLog (const char * event)
 * Send the log with TRACE LogLevel
 */
 
-void StackLogger::trace (const char * event)
+void StackLogger::trace (const char* event)
 {
 	this->log (LogLevelVal::Trace, event);
 }
@@ -166,7 +166,7 @@ void StackLogger::trace (const char * event)
 /**
 * Send the log with DEBUG LogLevel
 */
-void StackLogger::debug (const char * event)
+void StackLogger::debug (const char* event)
 {
 	this->log (LogLevelVal::Debug, event);
 }
@@ -174,7 +174,7 @@ void StackLogger::debug (const char * event)
 /**
 * Send the log with INFO LogLevel
 */
-void StackLogger::info (const char * event)
+void StackLogger::info (const char* event)
 {
 	this->log (LogLevelVal::Info, event);
 }
@@ -183,7 +183,7 @@ void StackLogger::info (const char * event)
 /**
 * Send the log with ERROR LogLevel
 */
-void StackLogger::error (const char * event)
+void StackLogger::error (const char* event)
 {
 	this->log (LogLevelVal::Error, event);
 }
@@ -192,7 +192,7 @@ void StackLogger::error (const char * event)
 /**
 * Send the log with FATAL LogLevel
 */
-void StackLogger::fatal (const char * event)
+void StackLogger::fatal (const char* event)
 {
 	this->log (LogLevelVal::Fatal, event);
 }
@@ -202,7 +202,7 @@ void StackLogger::fatal (const char * event)
 /**
 * Send all the events to the receiver
 */
-void StackLogger::getAll (StackLoggerReceiver & receiver)
+void StackLogger::getAll (StackLoggerReceiver& receiver)
 {
 	for (EventContainer const& e : pd->events)
 	{
@@ -213,15 +213,15 @@ void StackLogger::getAll (StackLoggerReceiver & receiver)
 /**
 * generate a EventContainer and send to wherever is needed
 */
-void StackLogger::log (LogLevel logLevel, const char * event)
+void StackLogger::log (LogLevel logLevel, const char* event)
 {
 	//TODO: When C++20 arrives.. use std::format and std::chrono::format
 	auto now = std::chrono::system_clock::now ();
 	auto in_time_t = std::chrono::system_clock::to_time_t (now);
 	struct tm buf;
 	gmtime_s (&buf, &in_time_t);
-	char str[MAX_DATE_SIZE];
-	strftime ((char *)str, sizeof (str), "%F %T UTC", &buf);
+	char str [MAX_DATE_SIZE];
+	strftime ((char*) str, sizeof (str), "%F %T UTC", &buf);
 
 	EventContainer ec;
 	ec.date = str;
@@ -250,7 +250,7 @@ void StackLogger::setConsoleMode (LogLevel logLevel)
 /**
 * Set the LogLevel in wich the logfile will show info and prepares the file
 */
-void StackLogger::setFileMode (LogLevel logLevel, const char * logPath, const char * fileName)
+void StackLogger::setFileMode (LogLevel logLevel, const char* logPath, const char* fileName)
 {
 	if (pd->fileLogLevel != LogLevelVal::DontLog)
 	{
@@ -294,8 +294,8 @@ void StackLogger::setFileMode (LogLevel logLevel, const char * logPath, const ch
 		auto in_time_t = std::chrono::system_clock::to_time_t (now);
 		struct tm buf;
 		gmtime_s (&buf, &in_time_t);
-		char str[MAX_DATE_SIZE];
-		strftime ((char *)str, sizeof (str), "_%F.log", &buf);
+		char str [MAX_DATE_SIZE];
+		strftime ((char*) str, sizeof (str), "_%F.log", &buf);
 
 		logFileName.append (str);
 

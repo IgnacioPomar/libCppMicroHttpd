@@ -17,37 +17,37 @@ class LIBHTTPD_API WebParameters
 {
 public:
 	Method method;
-	void * webContext;
+	void* webContext;
 
-	WebParametersPrivateData *pd;
+	WebParametersPrivateData* pd;
 
 
 
 	WebParameters (WebParameters const&) = delete;
 	WebParameters& operator=(WebParameters const&) = delete;
-	WebParameters (void * webContext);
+	WebParameters (void* webContext);
 	~WebParameters ();
 
-	void addParam (const char * param, const char * data);
+	void addParam (const char* param, const char* data);
 
 	//move constructor and assignement
 	WebParameters& operator=(WebParameters&& other);
-	WebParameters (WebParameters && other);
+	WebParameters (WebParameters&& other);
 
 
 
-	double getDoubleParam (const char * param, bool & isFilled);
-	unsigned int getUnsignedParam (const char * param, bool & isFilled);
-	const char * getStringParam (const char * param, bool & isFilled);
+	double getDoubleParam (const char* param, bool& isFilled);
+	unsigned int getUnsignedParam (const char* param, bool& isFilled);
+	const char* getStringParam (const char* param, bool& isFilled);
 
-	void append (const char * param, const char * data);
-	void addDefaultValue (const char * param, const char * defaultValue);
+	void append (const char* param, const char* data);
+	void addDefaultValue (const char* param, const char* defaultValue);
 
-	static Method getMethod (const char * strMethod);
+	static Method getMethod (const char* strMethod);
 
 	static bool isMethodWithFiles (Method method);
 
-	WebParametersPrivateData & LIBHTTPD_LOCAL getPrivateData ();
+	WebParametersPrivateData& LIBHTTPD_LOCAL getPrivateData ();
 
 };
 

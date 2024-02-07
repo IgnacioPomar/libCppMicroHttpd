@@ -14,7 +14,7 @@
 #include "WebCommand.h"
 #include "WebProcess.h"
 
-WebProcess::WebProcess (int portNumber, ThreadModel threadModel, void * context)
+WebProcess::WebProcess (int portNumber, ThreadModel threadModel, void* context)
 	:portNumber (portNumber), context (context), launched (false),
 	logger (nullptr), logMode (LogMode::NO_DEBUG)
 {
@@ -30,9 +30,9 @@ WebProcess::WebProcess (int portNumber, ThreadModel threadModel, void * context)
 bool WebProcess::initDaemon ()
 {
 	httpDaemon = MHD_start_daemon (flags, portNumber, nullptr, nullptr,
-		&httpRequestReciever, this,
-		MHD_OPTION_NOTIFY_COMPLETED, &httpRequestCompleted, nullptr,
-		MHD_OPTION_END);
+								   &httpRequestReciever, this,
+								   MHD_OPTION_NOTIFY_COMPLETED, &httpRequestCompleted, nullptr,
+								   MHD_OPTION_END);
 	launched = (httpDaemon != nullptr);
 	return launched;
 }
@@ -83,7 +83,7 @@ bool WebProcess::setThreadModel (ThreadModel threadModel)
 }
 
 
-void WebProcess::setDebugMode (LogMode logMode, WebLogger * logger)
+void WebProcess::setDebugMode (LogMode logMode, WebLogger* logger)
 {
 	this->logger = logger;
 	this->logMode = (logger == nullptr) ? LogMode::NO_DEBUG : logMode;
@@ -105,11 +105,11 @@ static int dummy;
 *                                   httpRequestReciever in the current connection
 * \param    [in]   toe				reason for request termination see MHD_OPTION_NOTIFY_COMPLETED.
 */
-void WebProcess::httpRequestCompleted (void * context, MHD_Connection * connection, void ** ptr, MHD_RequestTerminationCode toe)
+void WebProcess::httpRequestCompleted (void* context, MHD_Connection* connection, void** ptr, MHD_RequestTerminationCode toe)
 {
 	if (*ptr != nullptr && *ptr != &dummy)
 	{
-		WebPostParams * pwp = (WebPostParams *)*ptr;
+		WebPostParams* pwp = (WebPostParams*) *ptr;
 		delete pwp;
 		*ptr = nullptr;
 	}
@@ -125,9 +125,9 @@ void WebProcess::httpRequestCompleted (void * context, MHD_Connection * connecti
 * \param    [in]   value		Valor de la clave query
 * \return	Siempre MHD_YES: No hay posibilidad de no aceptar un parametro
 */
-int WebProcess::parseQueryParameter (void * context, MHD_ValueKind kind, const char * key, const char * value)
+int WebProcess::parseQueryParameter (void* context, MHD_ValueKind kind, const char* key, const char* value)
 {
-	WebParameters * wc = (WebParameters *)context;
+	WebParameters* wc = (WebParameters*) context;
 	wc->addParam (key, value);
 
 	return MHD_YES;
@@ -155,9 +155,9 @@ int WebProcess::parseQueryParameter (void * context, MHD_ValueKind kind, const c
 *                                   since the access handler may be called many times (i.e., for a PUT/POST operation with plenty of upload data)
 * \return	Must return MHD_YES if the connection was handled successfully, MHD_NO if the socket must be closed due to a serious error while handling the request
 */
-int WebProcess::httpRequestReciever (void * webProcess, MHD_Connection * connection, const char * url, const char * methodCStr, const char * version, const char * upload_data, size_t * upload_data_size, void ** ptr)
+int WebProcess::httpRequestReciever (void* webProcess, MHD_Connection* connection, const char* url, const char* methodCStr, const char* version, const char* upload_data, size_t* upload_data_size, void** ptr)
 {
-	WebProcess * wp = (WebProcess *)webProcess;
+	WebProcess* wp = (WebProcess*) webProcess;
 	//--------------- first fase: parse the parameters ---------------
 
 	// The first time only the headers are valid,   do not respond in the first round... 
@@ -178,7 +178,7 @@ int WebProcess::httpRequestReciever (void * webProcess, MHD_Connection * connect
 	//Process post uploads
 	if (*upload_data_size)
 	{
-		WebPostParams * postParams;
+		WebPostParams* postParams;
 		if (*ptr == &dummy)
 		{
 			method = WebParameters::getMethod (methodCStr);
@@ -199,7 +199,7 @@ int WebProcess::httpRequestReciever (void * webProcess, MHD_Connection * connect
 		}
 		else
 		{
-			postParams = (WebPostParams *)*ptr;
+			postParams = (WebPostParams*) *ptr;
 		}
 
 		MHD_post_process (postParams->postProcessor, upload_data, *upload_data_size);
@@ -212,7 +212,7 @@ int WebProcess::httpRequestReciever (void * webProcess, MHD_Connection * connect
 	if (*ptr != &dummy)
 	{
 		//we have parsed POST parameters
-		WebPostParams * pwp = (WebPostParams *)*ptr;
+		WebPostParams* pwp = (WebPostParams*) *ptr;
 		requestParams = std::move (pwp->wp);
 	}
 	else
@@ -237,7 +237,7 @@ int WebProcess::httpRequestReciever (void * webProcess, MHD_Connection * connect
 	bool isOk = true;
 	std::string responseBody = "";
 	unsigned int httpCode = MHD_HTTP_OK;
-	WebCommand *comando = WebCommandRepository::findResource (url);
+	WebCommand* comando = WebCommandRepository::findResource (url);
 	if (comando == nullptr)
 	{
 		httpCode = MHD_HTTP_NOT_FOUND;
@@ -255,16 +255,16 @@ int WebProcess::httpRequestReciever (void * webProcess, MHD_Connection * connect
 
 
 	// Prepare oputput 
-	const char * page = responseBody.c_str ();
+	const char* page = responseBody.c_str ();
 
 	//--------------- final fase: the response ---------------
 	int ret;
-	struct MHD_Response * response;
+	struct MHD_Response* response;
 	//Posibles valores:
 	// MHD_RESPMEM_PERSISTENT  - Buffer is a persistent (static/global) buffer that won't change for at least the lifetime of the response
 	// MHD_RESPMEM_MUST_FREE   - Buffer is heap-allocated with 'malloc' (or equivalent) and should be freed by MHD
 	// MHD_RESPMEM_MUST_COPY   - Buffer is in transient memory and only valid during the call to 'MHD_create_response_from_buffer'. MHD must make its own private copy of the data for processing.
-	response = MHD_create_response_from_buffer (strlen (page), (void*)page, MHD_RESPMEM_MUST_COPY);
+	response = MHD_create_response_from_buffer (strlen (page), (void*) page, MHD_RESPMEM_MUST_COPY);
 	ret = MHD_queue_response (connection, httpCode, response);
 	MHD_destroy_response (response);
 	return ret;

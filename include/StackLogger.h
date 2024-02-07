@@ -30,7 +30,7 @@ public:
 
 	constexpr LogLevel (LogLevelVal value);
 	constexpr bool IsWorseThan (LogLevel logLevel) const;
-	constexpr const char * toString () const;
+	constexpr const char* toString () const;
 
 
 private:
@@ -43,7 +43,7 @@ private:
 class LIBHTTPD_API StackLoggerReceiver
 {
 public:
-	virtual void add (const char * date, const char * log, LogLevel logLevel, const char * logLevelTxt) = 0;
+	virtual void add (const char* date, const char* log, LogLevel logLevel, const char* logLevelTxt) = 0;
 };
 
 class EventContainer;
@@ -56,8 +56,8 @@ class StackLoggerPrivateData;
 class LIBHTTPD_API StackLogger : public WebLogger
 {
 private:
-	StackLoggerPrivateData *pd;
-	void send (EventContainer & ec);
+	StackLoggerPrivateData* pd;
+	void send (EventContainer& ec);
 
 	//Prevent illegal usage
 	StackLogger (const StackLogger&) = delete; // no copies
@@ -66,24 +66,24 @@ private:
 	StackLogger& operator=(StackLogger&&) = delete; // no move assignments
 
 public:
-	StackLogger (unsigned int maxStoredEvents = 500, LogLevel logLevel = LogLevelVal::DontLog, const char * logPath = nullptr, const char * fileName = nullptr);
+	StackLogger (unsigned int maxStoredEvents = 500, LogLevel logLevel = LogLevelVal::DontLog, const char* logPath = nullptr, const char* fileName = nullptr);
 	~StackLogger ();
 
 	//This is the "TRACE": it'll recieve events from WebLogger
-	void sendToLog (const char * log);
+	void sendToLog (const char* log);
 
 	//the usual ones
-	void log (LogLevel logLevel, const char * event);
-	void trace (const char * event);
-	void debug (const char * event);
-	void info (const char * event);
-	void error (const char * event);
-	void fatal (const char * event);
+	void log (LogLevel logLevel, const char* event);
+	void trace (const char* event);
+	void debug (const char* event);
+	void info (const char* event);
+	void error (const char* event);
+	void fatal (const char* event);
 
-	void getAll (StackLoggerReceiver & receiver);
+	void getAll (StackLoggerReceiver& receiver);
 
 
 	void setConsoleMode (LogLevel logLevel);
-	void setFileMode (LogLevel logLevel, const char * logPath, const char * fileName);
+	void setFileMode (LogLevel logLevel, const char* logPath, const char* fileName);
 	void delLogsOltherThan (int maxLogFileDays);
 };

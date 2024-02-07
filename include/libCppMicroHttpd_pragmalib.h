@@ -8,7 +8,6 @@
 #define _PRAGMA_LIB_LIB_CPP_MICRO_HTTPD_H_
 
 
-
 #ifdef _DEBUG 
 #pragma comment(lib, "libmicrohttpd-dll_d.lib")
 #else

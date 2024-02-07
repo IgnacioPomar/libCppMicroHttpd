@@ -10,8 +10,8 @@ class StackLogger;
 class ExampleContext
 {
 public:
-	WebProcess * wp;
-	StackLogger * logger;
+	WebProcess* wp;
+	StackLogger* logger;
 	int i = 0;
 
 };

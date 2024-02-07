@@ -11,10 +11,10 @@
 #include "WebLogger.h"
 
 
-void formatUrl (std::string & s, const char * url, const char * method, MHD_Connection * connection);
+void formatUrl (std::string& s, const char* url, const char* method, MHD_Connection* connection);
 
 
-void WebLogger::logUrl (const char * url, const char * method, MHD_Connection * connection)
+void WebLogger::logUrl (const char* url, const char* method, MHD_Connection* connection)
 {
 	std::string s;
 	formatUrl (s, url, method, connection);
@@ -22,13 +22,13 @@ void WebLogger::logUrl (const char * url, const char * method, MHD_Connection * 
 	this->sendToLog (s.c_str ());
 }
 
-void WebLogger::logParams (const char * url, const char * method, MHD_Connection * connection, WebParameters & requestParams)
+void WebLogger::logParams (const char* url, const char* method, MHD_Connection* connection, WebParameters& requestParams)
 {
 	std::string s;
 	formatUrl (s, url, method, connection);
 
 
-	WebParametersPrivateData & wpPd = requestParams.getPrivateData ();
+	WebParametersPrivateData& wpPd = requestParams.getPrivateData ();
 
 	for (auto node : wpPd.parameters)
 	{
@@ -40,18 +40,18 @@ void WebLogger::logParams (const char * url, const char * method, MHD_Connection
 
 }
 
-void WebLogger::logParamsContents (const char * url, const char * method, MHD_Connection * connection, WebParameters & requestParams)
+void WebLogger::logParamsContents (const char* url, const char* method, MHD_Connection* connection, WebParameters& requestParams)
 {
 
 	std::string s;
 	formatUrl (s, url, method, connection);
 
-	WebParametersPrivateData & wpPd = requestParams.getPrivateData ();
+	WebParametersPrivateData& wpPd = requestParams.getPrivateData ();
 
 	for (auto node : wpPd.parameters)
 	{
 		s.append ("\n\t");
-		Parameter & p = node.second;
+		Parameter& p = node.second;
 		s.append (node.first).append (" = ");
 		if (p.isSet)
 		{
@@ -76,21 +76,21 @@ void WebLogger::logParamsContents (const char * url, const char * method, MHD_Co
 
 
 
-void formatUrl (std::string & s, const char * url, const char * method, MHD_Connection * conn)
+void formatUrl (std::string& s, const char* url, const char* method, MHD_Connection* conn)
 {
 	//TODO: Support ipV6
 
 
 	//Get origin IP
-	char ipBuff[17];
-	struct sockaddr *addr = MHD_get_connection_info (conn, MHD_CONNECTION_INFO_CLIENT_ADDRESS)->client_addr;
+	char ipBuff [17];
+	struct sockaddr* addr = MHD_get_connection_info (conn, MHD_CONNECTION_INFO_CLIENT_ADDRESS)->client_addr;
 	if (addr != nullptr)
 	{
 		snprintf (ipBuff, sizeof (ipBuff), "%d.%d.%d.%d",
-			addr->sa_data[2] & 0xFF,
-			addr->sa_data[3] & 0xFF,
-			addr->sa_data[4] & 0xFF,
-			addr->sa_data[5] & 0xFF);
+				  addr->sa_data [2] & 0xFF,
+				  addr->sa_data [3] & 0xFF,
+				  addr->sa_data [4] & 0xFF,
+				  addr->sa_data [5] & 0xFF);
 	}
 	else
 	{

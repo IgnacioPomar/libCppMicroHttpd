@@ -22,7 +22,7 @@ static const std::map<Method, std::string> HTTP_METHODS_STR
 };
 */
 
-WebParameters::WebParameters (void * webContext) :webContext (webContext)
+WebParameters::WebParameters (void* webContext) :webContext (webContext)
 {
 	pd = new WebParametersPrivateData ();
 }
@@ -37,7 +37,7 @@ WebParameters::~WebParameters ()
 }
 
 
-WebParameters & WebParameters::operator=(WebParameters && other)
+WebParameters& WebParameters::operator=(WebParameters&& other)
 {
 	//Release created resources
 	delete (this->pd);
@@ -54,7 +54,7 @@ WebParameters & WebParameters::operator=(WebParameters && other)
 }
 
 
-WebParameters::WebParameters (WebParameters && other)
+WebParameters::WebParameters (WebParameters&& other)
 {
 	// pilfer other's resource
 	pd = other.pd;
@@ -71,7 +71,7 @@ WebParameters::WebParameters (WebParameters && other)
 *
 * \param    [in]   chMethod
 */
-Method WebParameters::getMethod (const char * methodCStr)
+Method WebParameters::getMethod (const char* methodCStr)
 {
 	std::string strMethod (methodCStr);
 	Method method = Method::UNKNOWN;
@@ -110,7 +110,7 @@ bool WebParameters::isMethodWithFiles (Method method)
 * \param    [in]	param
 * \param    [in]	data
 */
-void WebParameters::append (const char * param, const char * data)
+void WebParameters::append (const char* param, const char* data)
 {
 	//TODO: posible Bug si se trata de fichero binario
 	Parametros::iterator it = pd->parameters.find (param);
@@ -130,12 +130,12 @@ void WebParameters::append (const char * param, const char * data)
 * \param    [in]	param
 * \param    [in]	data
 */
-void WebParameters::addParam (const char * param, const char * data)
+void WebParameters::addParam (const char* param, const char* data)
 {
 	Parameter parameter;
 	parameter.isSet = true;
 	parameter.value = (data == nullptr) ? "" : data;
-	pd->parameters[param] = parameter;
+	pd->parameters [param] = parameter;
 }
 
 
@@ -145,13 +145,13 @@ void WebParameters::addParam (const char * param, const char * data)
 * \param    [in]	param
 * \param    [out]	isFilled
 */
-const char * WebParameters::getStringParam (const char * param, bool & isFilled)
+const char* WebParameters::getStringParam (const char* param, bool& isFilled)
 {
 	Parametros::iterator it = pd->parameters.find (param);
 
 	if (it != pd->parameters.end ())
 	{
-		Parameter & param = it->second;
+		Parameter& param = it->second;
 		isFilled = param.isSet;
 		return (param.isSet) ? param.value.c_str () : param.defaultValue.c_str ();
 	}
@@ -169,14 +169,14 @@ const char * WebParameters::getStringParam (const char * param, bool & isFilled)
 * \param    [out]	isFilled
 * \return
 */
-double WebParameters::getDoubleParam (const char * param, bool & isFilled)
+double WebParameters::getDoubleParam (const char* param, bool& isFilled)
 {
 	Parametros::iterator it = pd->parameters.find (param);
 
 	if (it != pd->parameters.end ())
 	{
-		Parameter & param = it->second;
-		std::string & val = (param.isSet) ? param.value : param.defaultValue;
+		Parameter& param = it->second;
+		std::string& val = (param.isSet) ? param.value : param.defaultValue;
 		try
 		{
 			double retVal = std::stod (val);
@@ -207,14 +207,14 @@ double WebParameters::getDoubleParam (const char * param, bool & isFilled)
 * \param    [out]	isFilled
 * \return
 */
-unsigned int WebParameters::getUnsignedParam (const char * param, bool & isFilled)
+unsigned int WebParameters::getUnsignedParam (const char* param, bool& isFilled)
 {
 	Parametros::iterator it = pd->parameters.find (param);
 
 	if (it != pd->parameters.end ())
 	{
-		Parameter & param = it->second;
-		std::string & val = (param.isSet) ? param.value : param.defaultValue;
+		Parameter& param = it->second;
+		std::string& val = (param.isSet) ? param.value : param.defaultValue;
 		try
 		{
 			unsigned int retVal = std::stoi (val);
@@ -239,20 +239,20 @@ unsigned int WebParameters::getUnsignedParam (const char * param, bool & isFille
 * \param    [in]	param	Nombre que se uso en el servicio para este parámetro
 * \param    [out]	data	Valor del parametro
 */
-void WebParameters::addDefaultValue (const char * param, const char * defaultValue)
+void WebParameters::addDefaultValue (const char* param, const char* defaultValue)
 {
 	//YAGNI: Comprobar si existe previamente
 	//a dia de hoy, se comprueba si no existe, y de no existir, se añade el valor por defecto
 	Parameter parameter;
 	parameter.isSet = false;
 	parameter.defaultValue = defaultValue;
-	pd->parameters[param] = parameter;
+	pd->parameters [param] = parameter;
 }
 
 
 
 
-WebParametersPrivateData &LIBHTTPD_LOCAL WebParameters::getPrivateData ()
+WebParametersPrivateData& LIBHTTPD_LOCAL WebParameters::getPrivateData ()
 {
 	return *pd;
 }

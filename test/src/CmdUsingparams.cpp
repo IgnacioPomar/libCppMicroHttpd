@@ -14,15 +14,15 @@ class CmdUsingParams : public WebCommand
 {
 public:
 	CmdUsingParams ();
-	const char * getBaseUrl ();
-	const char * getDescription ();
-	bool execute (WebParameters & wsParams, std::string & response);
+	const char* getBaseUrl ();
+	const char* getDescription ();
+	bool execute (WebParameters& wsParams, std::string& response);
 
 
-	static bool isOddNumber (const char * paramValue, void * context);
+	static bool isOddNumber (const char* paramValue, void* context);
 private:
 
-	static constexpr const char * url = "/useParams/";
+	static constexpr const char* url = "/useParams/";
 };
 
 
@@ -40,19 +40,19 @@ CmdUsingParams::CmdUsingParams () : WebCommand (true, true)
 }
 
 
-const char * CmdUsingParams::getBaseUrl ()
+const char* CmdUsingParams::getBaseUrl ()
 {
 	return url;
 }
 
-const char * CmdUsingParams::getDescription ()
+const char* CmdUsingParams::getDescription ()
 {
 	return "Example using params";
 }
 
 
 
-bool CmdUsingParams::isOddNumber (const char * paramValue, void * context)
+bool CmdUsingParams::isOddNumber (const char* paramValue, void* context)
 {
 	//ExampleContext* ec = (ExampleContext*)context;
 	int number = atoi (paramValue);
@@ -75,14 +75,14 @@ bool CmdUsingParams::isOddNumber (const char * paramValue, void * context)
 
 
 
-bool CmdUsingParams::execute (WebParameters & wsParams, std::string & response)
+bool CmdUsingParams::execute (WebParameters& wsParams, std::string& response)
 {
 	std::ostringstream retVal;
 
 	retVal << "<h1>Params used</h1> <ul>";
 	bool isFilled;
 
-	const char * string;
+	const char* string;
 	double dob;
 	unsigned int ui;
 

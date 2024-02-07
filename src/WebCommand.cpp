@@ -13,8 +13,8 @@
 class LIBHTTPD_LOCAL Option
 {
 public:
-	Option (const char * opt, const char * description, bool isRequired, const char * defVal, callbackCheck checkFunc = nullptr);
-	Option (const char * opt, const char * description, const char *alternativeOption, const char * defVal, callbackCheck checkFunc = nullptr);
+	Option (const char* opt, const char* description, bool isRequired, const char* defVal, callbackCheck checkFunc = nullptr);
+	Option (const char* opt, const char* description, const char* alternativeOption, const char* defVal, callbackCheck checkFunc = nullptr);
 
 	//definition
 	std::string opt;
@@ -38,13 +38,13 @@ public:
 };
 
 
-Option::Option (const char * opt, const char * description, bool isRequired, const char * defVal, callbackCheck checkFunc) :
+Option::Option (const char* opt, const char* description, bool isRequired, const char* defVal, callbackCheck checkFunc) :
 	opt (opt), description (description), isRequired (isRequired), checkFunc (checkFunc), defVal (defVal)
 {
 	hasAlternativeOption = false;
 }
 
-Option::Option (const char * opt, const char * description, const char * alternativeOption, const char * defVal, callbackCheck checkFunc) :
+Option::Option (const char* opt, const char* description, const char* alternativeOption, const char* defVal, callbackCheck checkFunc) :
 	opt (opt), alternativeOption (alternativeOption), description (description), checkFunc (checkFunc), defVal (defVal)
 {
 	isRequired = true;
@@ -66,7 +66,7 @@ WebCommand::~WebCommand ()
 	}
 }
 
-WebCommand::WebCommand (WebCommand && other)
+WebCommand::WebCommand (WebCommand&& other)
 {
 	this->pd = other.pd;
 	other.pd = nullptr;
@@ -77,7 +77,7 @@ WebCommand::WebCommand (WebCommand && other)
 * Help Message
 * \param    [in]   errMsg
 */
-void WebCommand::getHelp (std::string & response, std::string * errMsg)
+void WebCommand::getHelp (std::string& response, std::string* errMsg)
 {
 	response.append ("<h1>").append (this->getBaseUrl ()).append ("</h1>");
 	response.append ("<p>").append (this->getDescription ()).append ("</p>");
@@ -89,7 +89,7 @@ void WebCommand::getHelp (std::string & response, std::string * errMsg)
 	}
 
 	response.append ("<h2>Parametros Obligatorios</h2><ul>");
-	for (Option &opt : pd->opts)
+	for (Option& opt : pd->opts)
 	{
 		if (opt.isRequired)
 		{
@@ -104,7 +104,7 @@ void WebCommand::getHelp (std::string & response, std::string * errMsg)
 	}
 	response.append ("</ul>");
 	response.append ("<h2>Parametros Optativos</h2><ul>");
-	for (Option &opt : pd->opts)
+	for (Option& opt : pd->opts)
 	{
 		if (!opt.isRequired)
 		{
@@ -117,7 +117,7 @@ void WebCommand::getHelp (std::string & response, std::string * errMsg)
 	std::string href (this->getBaseUrl ());
 	href.append ("?");
 	std::string sep = "";
-	for (Option &opt : pd->opts)
+	for (Option& opt : pd->opts)
 	{
 		if (opt.isRequired)
 		{
@@ -131,13 +131,13 @@ void WebCommand::getHelp (std::string & response, std::string * errMsg)
 
 }
 
-void WebCommand::addOption (const char * optName, const char * description, bool isRequired, const char * defVal, callbackCheck checkFunc)
+void WebCommand::addOption (const char* optName, const char* description, bool isRequired, const char* defVal, callbackCheck checkFunc)
 {
 	Option opt (optName, description, isRequired, defVal, checkFunc);
 	pd->opts.push_back (opt);
 }
 
-void WebCommand::addOption (const char * optName, const char * description, const char * alternativeOption, const char * defVal, callbackCheck checkFunc)
+void WebCommand::addOption (const char* optName, const char* description, const char* alternativeOption, const char* defVal, callbackCheck checkFunc)
 {
 	Option opt (optName, description, alternativeOption, defVal, checkFunc);
 	pd->opts.push_back (opt);
@@ -151,9 +151,9 @@ void WebCommand::addOption (const char * optName, const char * description, cons
 * Check if a parameter is required, and if so, if is set (or its alternative)
 * \param    [in]   wsParams	called params
 */
-bool WebCommand::checkOption (WebParameters & wsParams, Option & opt, std::string & response)
+bool WebCommand::checkOption (WebParameters& wsParams, Option& opt, std::string& response)
 {
-	Parametros & prms = wsParams.getPrivateData ().parameters;
+	Parametros& prms = wsParams.getPrivateData ().parameters;
 	Parametros::iterator it = prms.find (opt.opt);
 	if (it == prms.end ())
 	{
@@ -206,9 +206,9 @@ bool WebCommand::checkOption (WebParameters & wsParams, Option & opt, std::strin
 * \param    [in]   wsParams
 */
 
-bool WebCommand::checkOptsOrHelp (WebParameters & wsParams, std::string & response)
+bool WebCommand::checkOptsOrHelp (WebParameters& wsParams, std::string& response)
 {
-	for (Option &opt : pd->opts)
+	for (Option& opt : pd->opts)
 	{
 		if (!checkOption (wsParams, opt, response))
 		{

@@ -18,8 +18,8 @@ private:
 	std::ostringstream retVal;
 public:
 	void addHeader ();
-	void add (const char * text);
-	void add (const char * date, const char * log, LogLevel logLevel, const char * logLevelTxt);
+	void add (const char* text);
+	void add (const char* date, const char* log, LogLevel logLevel, const char* logLevelTxt);
 	std::string getRetVal ();
 };
 
@@ -36,7 +36,7 @@ void LogFormatter::addHeader ()
 /**
 * Adds a log line
 */
-void LogFormatter::add (const char * date, const char * log, LogLevel logLevel, const char * logLevelTxt)
+void LogFormatter::add (const char* date, const char* log, LogLevel logLevel, const char* logLevelTxt)
 {
 	retVal << "<div><span class='date'>" << date << "</span><span class='logLevel'>" << logLevelTxt << "</span><pre>" << log << "</pre></div>";
 }
@@ -44,7 +44,7 @@ void LogFormatter::add (const char * date, const char * log, LogLevel logLevel, 
 /**
 * Adds arbitrary text
 */
-void LogFormatter::add (const char * text)
+void LogFormatter::add (const char* text)
 {
 	retVal << text;
 }
@@ -62,29 +62,29 @@ class CmdLogViewer : public WebCommand
 {
 public:
 	CmdLogViewer () :WebCommand (true, true) {};
-	const char * getBaseUrl ();
-	const char * getDescription ();
-	bool execute (WebParameters & wsParams, std::string & response);
+	const char* getBaseUrl ();
+	const char* getDescription ();
+	bool execute (WebParameters& wsParams, std::string& response);
 private:
 
-	static constexpr const char * url = "/LogViewer/";
+	static constexpr const char* url = "/LogViewer/";
 };
 
 
-const char * CmdLogViewer::getBaseUrl ()
+const char* CmdLogViewer::getBaseUrl ()
 {
 	return url;
 }
 
-const char * CmdLogViewer::getDescription ()
+const char* CmdLogViewer::getDescription ()
 {
 	return "Show the aviable commands";
 }
 
 
-bool CmdLogViewer::execute (WebParameters & wsParams, std::string & response)
+bool CmdLogViewer::execute (WebParameters& wsParams, std::string& response)
 {
-	ExampleContext* ec = (ExampleContext*)wsParams.webContext;
+	ExampleContext* ec = (ExampleContext*) wsParams.webContext;
 	LogFormatter  logFormatter;
 
 

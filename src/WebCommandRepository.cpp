@@ -4,6 +4,7 @@
 *	Copyright	(C) 2020
 ********************************************************************************************/
 
+#include <memory>
 #include <string>
 #include <unordered_map>
 #include "WebCommand.h"
@@ -20,7 +21,7 @@ public:
 
 
 
-WebCommand * WebCommandRepository::findResource (const char * url)
+WebCommand* WebCommandRepository::findResource (const char* url)
 {
 	/*
 	//YAGNI: Actually we are only searching for the string... may be in the future
@@ -36,12 +37,12 @@ WebCommand * WebCommandRepository::findResource (const char * url)
 	that means we should split the URL by / and create a classic tree
 	*/
 
-	CommandMap & cm = WebCommandRepository::staticCommands ().cm;
+	CommandMap& cm = WebCommandRepository::staticCommands ().cm;
 	CommandMap::iterator it = cm.find (url);
 
 	if (it != cm.end ())
 	{
-		WebCommand * wc = it->second.get ();
+		WebCommand* wc = it->second.get ();
 		return (wc->isEnabled) ? wc : nullptr;
 	}
 	else
@@ -51,29 +52,29 @@ WebCommand * WebCommandRepository::findResource (const char * url)
 }
 
 
-void WebCommandRepository::setCommandStatus (const char * url, bool isEnabled)
+void WebCommandRepository::setCommandStatus (const char* url, bool isEnabled)
 {
-	CommandMap & cm = WebCommandRepository::staticCommands ().cm;
+	CommandMap& cm = WebCommandRepository::staticCommands ().cm;
 	CommandMap::iterator it = cm.find (url);
 
 	if (it != cm.end ())
 	{
-		WebCommand * wc = it->second.get ();
+		WebCommand* wc = it->second.get ();
 		wc->isEnabled = isEnabled;
 	}
 }
 
 
-void WebCommandRepository::addCommand (WebCommand * webCommand)
+void WebCommandRepository::addCommand (WebCommand* webCommand)
 {
 	//YAGNI: to supportr real RestFul services, split by slash and create a tree
 	// (Using the ? in the path as arguments)
 
-	CommandMap & cm = WebCommandRepository::staticCommands ().cm;
-	cm[webCommand->getBaseUrl ()] = std::unique_ptr<WebCommand> (webCommand);
+	CommandMap& cm = WebCommandRepository::staticCommands ().cm;
+	cm [webCommand->getBaseUrl ()] = std::unique_ptr<WebCommand> (webCommand);
 }
 
-void WebCommandRepository::listWebCommands (callbackInfoCmd infoCmd, void * context)
+void WebCommandRepository::listWebCommands (callbackInfoCmd infoCmd, void* context)
 {
 	for (auto& cmdNode : staticCommands ().cm)
 	{
@@ -83,7 +84,7 @@ void WebCommandRepository::listWebCommands (callbackInfoCmd infoCmd, void * cont
 
 
 
-CommandContainer & WebCommandRepository::staticCommands ()
+CommandContainer& WebCommandRepository::staticCommands ()
 {
 	static CommandContainer comandosVar;
 	return comandosVar;
@@ -91,7 +92,7 @@ CommandContainer & WebCommandRepository::staticCommands ()
 
 
 //------------------------- Helper -------------------------
-StaticWebCommandAutoRegister::StaticWebCommandAutoRegister (WebCommand * comando)
+StaticWebCommandAutoRegister::StaticWebCommandAutoRegister (WebCommand* comando)
 {
 	WebCommandRepository::addCommand (comando);
 }

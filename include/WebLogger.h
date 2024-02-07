@@ -18,12 +18,12 @@ struct MHD_Connection;
 class LIBHTTPD_API WebLogger
 {
 public:
-	void logUrl (const char * url, const char * method, MHD_Connection * connection);
-	void logParams (const char * url, const char * method, MHD_Connection * connection, WebParameters & requestParams);
-	void logParamsContents (const char * url, const char * method, MHD_Connection * connection, WebParameters & requestParams);
+	void logUrl (const char* url, const char* method, MHD_Connection* connection);
+	void logParams (const char* url, const char* method, MHD_Connection* connection, WebParameters& requestParams);
+	void logParamsContents (const char* url, const char* method, MHD_Connection* connection, WebParameters& requestParams);
 
 
-	virtual void sendToLog (const char * log) = 0;
+	virtual void sendToLog (const char* log) = 0;
 };
 
 #endif //_WEB_LOGGER_ABSTRACT_H_
