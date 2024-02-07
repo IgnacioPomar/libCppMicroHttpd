@@ -16,6 +16,7 @@ struct MHD_Connection;
 struct MHD_Daemon;
 enum MHD_RequestTerminationCode;
 enum MHD_ValueKind;
+enum MHD_Result;
 
 
 //class that will recive the updates
@@ -68,9 +69,9 @@ private:
 
 
 	//conection functions with libMicroHttpd
-	static int httpRequestReciever (void* webProcess, MHD_Connection* connection, const char* url, const char* method, const char* version, const char* upload_data, size_t* upload_data_size, void** ptr);
+	static MHD_Result httpRequestReciever (void* webProcess, MHD_Connection* connection, const char* url, const char* method, const char* version, const char* upload_data, size_t* upload_data_size, void** ptr);
 	static void httpRequestCompleted (void* context, MHD_Connection* connection, void** ptr, enum MHD_RequestTerminationCode toe);
-	static int parseQueryParameter (void* context, enum MHD_ValueKind kind, const char* key, const char* value);
+	static MHD_Result parseQueryParameter (void* context, enum MHD_ValueKind kind, const char* key, const char* value);
 
 
 };

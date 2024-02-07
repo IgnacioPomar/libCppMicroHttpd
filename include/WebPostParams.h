@@ -18,10 +18,10 @@
 class LIBHTTPD_LOCAL WebPostParams
 {
 private:
-	static int postDataIterator (void* coninfo_cls, enum MHD_ValueKind kind, const char* key,
-								 const char* filename, const char* content_type,
-								 const char* transfer_encoding, const char* data, uint64_t off,
-								 size_t size);
+	static MHD_Result postDataIterator (void* coninfo_cls, enum MHD_ValueKind kind, const char* key,
+										const char* filename, const char* content_type,
+										const char* transfer_encoding, const char* data, uint64_t off,
+										size_t size);
 public:
 	WebParameters wp;
 	MHD_PostProcessor* postProcessor;

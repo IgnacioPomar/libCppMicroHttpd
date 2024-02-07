@@ -125,7 +125,7 @@ void WebProcess::httpRequestCompleted (void* context, MHD_Connection* connection
 * \param    [in]   value		Valor de la clave query
 * \return	Siempre MHD_YES: No hay posibilidad de no aceptar un parametro
 */
-int WebProcess::parseQueryParameter (void* context, MHD_ValueKind kind, const char* key, const char* value)
+MHD_Result WebProcess::parseQueryParameter (void* context, MHD_ValueKind kind, const char* key, const char* value)
 {
 	WebParameters* wc = (WebParameters*) context;
 	wc->addParam (key, value);
@@ -155,7 +155,7 @@ int WebProcess::parseQueryParameter (void* context, MHD_ValueKind kind, const ch
 *                                   since the access handler may be called many times (i.e., for a PUT/POST operation with plenty of upload data)
 * \return	Must return MHD_YES if the connection was handled successfully, MHD_NO if the socket must be closed due to a serious error while handling the request
 */
-int WebProcess::httpRequestReciever (void* webProcess, MHD_Connection* connection, const char* url, const char* methodCStr, const char* version, const char* upload_data, size_t* upload_data_size, void** ptr)
+MHD_Result WebProcess::httpRequestReciever (void* webProcess, MHD_Connection* connection, const char* url, const char* methodCStr, const char* version, const char* upload_data, size_t* upload_data_size, void** ptr)
 {
 	WebProcess* wp = (WebProcess*) webProcess;
 	//--------------- first fase: parse the parameters ---------------
@@ -169,7 +169,7 @@ int WebProcess::httpRequestReciever (void* webProcess, MHD_Connection* connectio
 			wp->logger->logUrl (url, methodCStr, connection);
 		}
 
-		return MHD_YES;
+		return MHD_Result::MHD_YES;
 	}
 
 	Method method = Method::UNKNOWN;
@@ -186,7 +186,7 @@ int WebProcess::httpRequestReciever (void* webProcess, MHD_Connection* connectio
 			if (!WebParameters::isMethodWithFiles (method))
 			{
 				//Not suported Method for file uploading
-				return MHD_NO;
+				return MHD_Result::MHD_NO;
 			}
 
 
@@ -195,7 +195,7 @@ int WebProcess::httpRequestReciever (void* webProcess, MHD_Connection* connectio
 
 			postParams->wp.method = method;
 
-			return MHD_YES;
+			return MHD_Result::MHD_YES;
 		}
 		else
 		{
@@ -204,7 +204,7 @@ int WebProcess::httpRequestReciever (void* webProcess, MHD_Connection* connectio
 
 		MHD_post_process (postParams->postProcessor, upload_data, *upload_data_size);
 		*upload_data_size = 0;
-		return MHD_YES;
+		return MHD_Result::MHD_YES;
 	}
 
 	// Now, query parameters
@@ -244,7 +244,7 @@ int WebProcess::httpRequestReciever (void* webProcess, MHD_Connection* connectio
 	}
 	else if (!comando->checkOptsOrHelp (requestParams, responseBody))
 	{
-		httpCode = MHD_HTTP_UNPROCESSABLE_ENTITY; // Incoorrect parametters
+		httpCode = MHD_HTTP_UNPROCESSABLE_CONTENT; // Incoorrect parametters
 	}
 	else if (!comando->execute (requestParams, responseBody))
 	{
@@ -258,7 +258,7 @@ int WebProcess::httpRequestReciever (void* webProcess, MHD_Connection* connectio
 	const char* page = responseBody.c_str ();
 
 	//--------------- final fase: the response ---------------
-	int ret;
+	MHD_Result ret;
 	struct MHD_Response* response;
 	//Posibles valores:
 	// MHD_RESPMEM_PERSISTENT  - Buffer is a persistent (static/global) buffer that won't change for at least the lifetime of the response

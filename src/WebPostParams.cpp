@@ -38,7 +38,7 @@ WebPostParams::~WebPostParams ()
 * \param    [in]	off						offset of data in the overall value.
 * \param    [in]	size					number of bytes in data available.
 */
-int WebPostParams::postDataIterator (void* coninfo_cls, MHD_ValueKind kind, const char* key, const char* filename, const char* content_type, const char* transfer_encoding, const char* data, uint64_t off, size_t size)
+MHD_Result WebPostParams::postDataIterator (void* coninfo_cls, MHD_ValueKind kind, const char* key, const char* filename, const char* content_type, const char* transfer_encoding, const char* data, uint64_t off, size_t size)
 {
 	WebParameters* wp = (WebParameters*) coninfo_cls;
 
