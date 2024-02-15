@@ -25,7 +25,7 @@ class LIBHTTPD_LOCAL EventContainer
 public:
 	std::string date;
 	std::string event;
-	LogLevel logLevel;
+	LogLevelWrapper logLevel;
 };
 
 /**
@@ -41,8 +41,8 @@ public:
 	std::string logPath;
 	std::ofstream logfile;
 
-	LogLevel fileLogLevel;
-	LogLevel consoleLogLevel;
+	LogLevelWrapper fileLogLevel;
+	LogLevelWrapper consoleLogLevel;
 	unsigned int maxStoredEvents;
 };
 
@@ -54,7 +54,7 @@ public:
 /**
 * Constructor
 */
-constexpr  LogLevel::LogLevel (LogLevelVal value) : value (value)
+constexpr  LogLevelWrapper::LogLevelWrapper (LogLevel value) : value (value)
 {
 }
 
@@ -62,7 +62,7 @@ constexpr  LogLevel::LogLevel (LogLevelVal value) : value (value)
 /**
 * Allow switch and comparisons
 */
-LogLevel::operator LogLevelVal() const
+LogLevelWrapper::operator LogLevel() const
 {
 	return value;
 }
@@ -70,7 +70,7 @@ LogLevel::operator LogLevelVal() const
 /**
 * Tells if the current logLevel is Worse than the specified one
 */
-constexpr bool LogLevel::IsWorseThan (LogLevel logLevel) const
+constexpr bool LogLevelWrapper::IsWorseThan (LogLevelWrapper logLevel) const
 {
 	return (this->value >= logLevel.value);
 }
@@ -78,16 +78,16 @@ constexpr bool LogLevel::IsWorseThan (LogLevel logLevel) const
 /**
 * Converts the log level into its sting
 */
-constexpr const char* LogLevel::toString () const
+constexpr const char* LogLevelWrapper::toString () const
 {
 	switch (this->value)
 	{
-	case LogLevelVal::Trace: return "TRACE"; break;
-	case LogLevelVal::Debug: return "DEBUG"; break;
-	case LogLevelVal::Info: return "INFO"; break;
-	case LogLevelVal::Warn: return "WARN"; break;
-	case LogLevelVal::Error: return "ERROR"; break;
-	case LogLevelVal::Fatal: return "FATAL"; break;
+	case LogLevel::Trace: return "TRACE"; break;
+	case LogLevel::Debug: return "DEBUG"; break;
+	case LogLevel::Info: return "INFO"; break;
+	case LogLevel::Warn: return "WARN"; break;
+	case LogLevel::Error: return "ERROR"; break;
+	case LogLevel::Fatal: return "FATAL"; break;
 	default: return "";
 	}
 }
@@ -151,7 +151,7 @@ void StackLogger::send (EventContainer& ec)
 */
 void StackLogger::sendToLog (const char* event)
 {
-	this->log (LogLevelVal::Trace, event);
+	this->log (LogLevel::Trace, event);
 }
 
 /**
@@ -160,7 +160,7 @@ void StackLogger::sendToLog (const char* event)
 
 void StackLogger::trace (const char* event)
 {
-	this->log (LogLevelVal::Trace, event);
+	this->log (LogLevel::Trace, event);
 }
 
 /**
@@ -168,7 +168,7 @@ void StackLogger::trace (const char* event)
 */
 void StackLogger::debug (const char* event)
 {
-	this->log (LogLevelVal::Debug, event);
+	this->log (LogLevel::Debug, event);
 }
 
 /**
@@ -176,7 +176,7 @@ void StackLogger::debug (const char* event)
 */
 void StackLogger::info (const char* event)
 {
-	this->log (LogLevelVal::Info, event);
+	this->log (LogLevel::Info, event);
 }
 
 
@@ -185,7 +185,7 @@ void StackLogger::info (const char* event)
 */
 void StackLogger::error (const char* event)
 {
-	this->log (LogLevelVal::Error, event);
+	this->log (LogLevel::Error, event);
 }
 
 
@@ -194,7 +194,7 @@ void StackLogger::error (const char* event)
 */
 void StackLogger::fatal (const char* event)
 {
-	this->log (LogLevelVal::Fatal, event);
+	this->log (LogLevel::Fatal, event);
 }
 
 
@@ -252,7 +252,7 @@ void StackLogger::setConsoleMode (LogLevel logLevel)
 */
 void StackLogger::setFileMode (LogLevel logLevel, const char* logPath, const char* fileName)
 {
-	if (pd->fileLogLevel != LogLevelVal::DontLog)
+	if (pd->fileLogLevel != LogLevel::DontLog)
 	{
 		pd->logfile.flush ();
 		pd->logfile.close ();
@@ -268,11 +268,11 @@ void StackLogger::setFileMode (LogLevel logLevel, const char* logPath, const cha
 	}
 	else
 	{
-		pd->fileLogLevel = LogLevelVal::DontLog;
+		pd->fileLogLevel = LogLevel::DontLog;
 	}
 
 	//open the file if we must
-	if (logLevel != LogLevelVal::DontLog)
+	if (logLevel != LogLevel::DontLog)
 	{
 		std::string logFileName;
 

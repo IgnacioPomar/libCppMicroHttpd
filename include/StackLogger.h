@@ -3,39 +3,35 @@
 *	Description	: Basic implementation of a WebLogger which allows easly integration with the web services
 ********************************************************************************************/
 
+#pragma once
+#ifndef _STACK_LOGGER_H_
+#define _STACK_LOGGER_H_
 
 
 #include "WebLogger.h"
-
-enum class LogLevelVal : unsigned char
-{
-	DontLog = 0xff,
-	Trace = 0x00,
-	Debug = 0x01,
-	Info = 0x02,
-	Warn = 0x03,
-	Error = 0x04,
-	Fatal = 0x05
-};
+#include "StdLogger.h"
 
 /**
-* Simple class enum with functions: represents the severity of the log
+* Provide type-safe way to handle log levels within the library,
+* offering functionality to compare log levels and convert them
+* to strings for logging purposes
 */
-class LIBHTTPD_API LogLevel
+class LIBHTTPD_API LogLevelWrapper
 {
 public:
-	LogLevel () = default;
+	LogLevelWrapper () = default;
 	explicit operator bool () = delete; // Prevent usage: if(LogLevel)
-	operator LogLevelVal() const;
+	operator LogLevel() const;
 
-	constexpr LogLevel (LogLevelVal value);
-	constexpr bool IsWorseThan (LogLevel logLevel) const;
+	constexpr LogLevelWrapper (LogLevel value);
+	constexpr bool IsWorseThan (LogLevelWrapper logLevel) const;
 	constexpr const char* toString () const;
 
 
 private:
-	LogLevelVal value;
+	LogLevel value;
 };
+
 
 /**
 * Pure virtual class wich descendants will recieve the log entries
@@ -43,7 +39,7 @@ private:
 class LIBHTTPD_API StackLoggerReceiver
 {
 public:
-	virtual void add (const char* date, const char* log, LogLevel logLevel, const char* logLevelTxt) = 0;
+	virtual void add (const char* date, const char* log, LogLevelWrapper logLevel, const char* logLevelTxt) = 0;
 };
 
 class EventContainer;
@@ -53,7 +49,7 @@ class StackLoggerPrivateData;
 /**
 * The class itself
 */
-class LIBHTTPD_API StackLogger : public WebLogger
+class LIBHTTPD_API StackLogger : public WebLogger, public StdLogger
 {
 private:
 	StackLoggerPrivateData* pd;
@@ -66,7 +62,7 @@ private:
 	StackLogger& operator=(StackLogger&&) = delete; // no move assignments
 
 public:
-	StackLogger (unsigned int maxStoredEvents = 500, LogLevel logLevel = LogLevelVal::DontLog, const char* logPath = nullptr, const char* fileName = nullptr);
+	StackLogger (unsigned int maxStoredEvents = 500, LogLevel logLevel = LogLevel::DontLog, const char* logPath = nullptr, const char* fileName = nullptr);
 	~StackLogger ();
 
 	//This is the "TRACE": it'll recieve events from WebLogger
@@ -87,3 +83,6 @@ public:
 	void setFileMode (LogLevel logLevel, const char* logPath, const char* fileName);
 	void delLogsOltherThan (int maxLogFileDays);
 };
+
+
+#endif //_STACK_LOGGER_H_

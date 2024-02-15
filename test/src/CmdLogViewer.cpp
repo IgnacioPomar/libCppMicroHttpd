@@ -19,7 +19,7 @@ private:
 public:
 	void addHeader ();
 	void add (const char* text);
-	void add (const char* date, const char* log, LogLevel logLevel, const char* logLevelTxt);
+	void add (const char* date, const char* log, LogLevelWrapper logLevel, const char* logLevelTxt);
 	std::string getRetVal ();
 };
 
@@ -36,7 +36,7 @@ void LogFormatter::addHeader ()
 /**
 * Adds a log line
 */
-void LogFormatter::add (const char* date, const char* log, LogLevel logLevel, const char* logLevelTxt)
+void LogFormatter::add (const char* date, const char* log, LogLevelWrapper logLevel, const char* logLevelTxt)
 {
 	retVal << "<div><span class='date'>" << date << "</span><span class='logLevel'>" << logLevelTxt << "</span><pre>" << log << "</pre></div>";
 }

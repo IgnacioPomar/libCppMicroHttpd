@@ -74,5 +74,8 @@
     <ClInclude Include="..\include\StackLogger.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\StdLogger.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

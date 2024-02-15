@@ -180,6 +180,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\StackLogger.h" />
+    <ClInclude Include="..\include\StdLogger.h" />
     <ClInclude Include="..\include\WebLogger.h" />
     <ClInclude Include="..\include\libCppMicroHttpd.h" />
     <ClInclude Include="..\include\libCppMicroHttpd_cfg.h" />
